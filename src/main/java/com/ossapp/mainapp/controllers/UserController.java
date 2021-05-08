@@ -8,6 +8,6 @@ import javax.annotation.PostConstruct;
 public class UserController {
     @PostConstruct
     public void init(){
-        System.out.println("Controller initialized");
+        System.out.println("New comment");
     }
 }
