@@ -1,13 +1,13 @@
 package com.ossapp.mainapp.controllers;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 
-@Controller
+@RestController
 public class UserController {
     @PostConstruct
-    public void init(){
+    public void init() {
         System.out.println("Controller initialized");
     }
 }
