@@ -8,9 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/style")
+@RequestMapping("/api/v1/styles")
 public class StyleController {
     private final StyleService styleService;
 
@@ -24,8 +25,13 @@ public class StyleController {
         return new ResponseEntity<>(requestProviderDto, HttpStatus.OK);
     }
 
+    @GetMapping()
+    public List<Style> getAll() {
+        return styleService.findAll();
+    }
+
     @GetMapping("/{id}")
-    public Style get(@PathVariable("id") Long id) {
+    public Style getById(@PathVariable("id") Long id) {
         return styleService.findById(id);
     }
 

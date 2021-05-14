@@ -4,6 +4,8 @@ import com.ossapp.mainapp.dto.RequestStyleDto;
 import com.ossapp.mainapp.entities.Style;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface StyleService {
     Style findById(Long id);
@@ -13,4 +15,6 @@ public interface StyleService {
     Long deleteById(Long id);
 
     Style update(RequestStyleDto style, long id);
+
+    List<Style> findAll();
 }

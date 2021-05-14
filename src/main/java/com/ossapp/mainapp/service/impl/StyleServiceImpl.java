@@ -7,6 +7,7 @@ import com.ossapp.mainapp.service.StyleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,10 @@ public class StyleServiceImpl implements StyleService {
         Optional<Style> styleOptional = styleRepository.findById(id);
         styleOptional.get().setName(requestStyleDto.getName());
         return styleRepository.save(styleOptional.get());
+    }
+
+    @Override
+    public List<Style> findAll() {
+        return styleRepository.findAll();
     }
 }
