@@ -9,9 +9,8 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "styles_tbl")
-public class Style extends BaseEntity {
+public class LevelStyle extends BaseEntity {
 
     @Column(name = "name_fld")
     private String name;
-
 }

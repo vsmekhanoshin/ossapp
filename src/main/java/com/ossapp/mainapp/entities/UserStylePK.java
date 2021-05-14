@@ -1,6 +1,5 @@
 package com.ossapp.mainapp.entities;
 
-
 import lombok.Data;
 
 import javax.persistence.Column;

@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Data;
-import org.hibernate.mapping.List;
 
-import java.util.ArrayList;
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -23,26 +24,32 @@ public class Users extends BaseEntity {
     @Column(name = "name_fld")
     private String name;
 
-    @Column (name = "birth_date_fld")
+    @Column(name = "birth_date_fld")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
     @NotNull
     private Date birthDate;
 
-    @Column (name = "weight_fld")
+    @Column(name = "weight_fld")
     private Integer weight;
 
-    @Column (name = "sex_fld")
+    @Column(name = "sex_fld")
     private Integer sex;
 
-    @Column (name = "about_fld")
+    @Column(name = "about_fld")
     private String about;
 
     @OneToMany(mappedBy = "userId", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<UserImages> images;
 
-    public void addImage(UserImages userImages){
-        if (userImages == null){
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_styles_tbl",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "style_id"))
+    private Collection<Style> styles;
+
+    public void addImage(UserImages userImages) {
+        if (userImages == null) {
             images = new ArrayList<>();
         }
         images.add(userImages);

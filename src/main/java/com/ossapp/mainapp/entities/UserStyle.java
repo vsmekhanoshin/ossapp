@@ -4,10 +4,8 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,6 +15,11 @@ public class UserStyle {
 
     @EmbeddedId
     private UserStylePK userStyleId;
+
+    @ManyToOne()
+    @NotNull(message = "Уровень мастерства не выбран")
+    @JoinColumn(name = "level_id")
+    private LevelStyle levelStyle;
 
     @Column(name = "create_at")
     @CreationTimestamp

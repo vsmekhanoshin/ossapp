@@ -26,4 +26,6 @@ public class BaseEntity implements Serializable {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column(name = "active")
+    private Boolean active;
 }
