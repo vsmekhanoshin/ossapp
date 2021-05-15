@@ -5,12 +5,16 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Data
 @Entity
-@Table(name = "styles_tbl")
+@Table(name = "level_style_tbl")
 public class LevelStyle extends BaseEntity {
 
-    @Column(name = "name_fld")
-    private String name;
+    @Min(value = 1, message = "Минимальный уровень 1")
+    @Max(value = 5, message = "Максимальный уровень 5")
+    @Column(name = "value")
+    private Integer value;
 }
