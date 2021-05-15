@@ -10,11 +10,11 @@ import java.util.List;
 public interface StyleService {
     Style findById(Long id);
 
-    Style save(RequestStyleDto style);
+    Style save(RequestStyleDto requestStyleDto);
 
     Long deleteById(Long id);
 
-    Style update(RequestStyleDto style, long id);
+    Style update(RequestStyleDto requestStyleDto, long id);
 
     List<Style> findAll();
 }
