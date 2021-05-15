@@ -35,12 +35,12 @@ public class StyleController {
         return styleService.findById(id);
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public Long delete(@PathVariable("id") long id) {
         return styleService.deleteById(id);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public RequestStyleDto update(@RequestBody  @Valid RequestStyleDto requestStyleDto, @PathVariable("id") long id) {
         styleService.update(requestStyleDto, id);
         return requestStyleDto;

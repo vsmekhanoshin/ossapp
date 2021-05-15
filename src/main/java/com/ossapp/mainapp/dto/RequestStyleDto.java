@@ -8,11 +8,11 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class RequestStyleDto {
     @NotBlank
-    private String name;
+    private int value;
 
     public Style fromRequestStyleToStyle(RequestStyleDto requestStyleDto) {
         Style style = new Style();
-        style.setName(requestStyleDto.getName());
+        style.setValue(requestStyleDto.getValue());
         return style;
     }
 }

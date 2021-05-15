@@ -3,6 +3,7 @@ package com.ossapp.mainapp.entities;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -26,6 +27,6 @@ public class BaseEntity implements Serializable {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Column(name = "active")
-    private Boolean active;
+    @Column(name = "active", columnDefinition = "boolean default true", nullable = false)
+    private Boolean active = true;
 }
