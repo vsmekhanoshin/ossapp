@@ -8,7 +8,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 public class RunApplication {
     public static void main(String[] args) {
-        System.out.println("Hello world");
         SpringApplication.run(RunApplication.class, args);
     }
 }
