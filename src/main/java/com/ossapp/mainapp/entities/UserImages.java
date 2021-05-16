@@ -6,12 +6,12 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "user_images_tbl")
+@Table(name = "images_user_tbl")
 public class UserImages extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users userId;
+    private User userId;
 
     @Column(name = "path_fld")
     private String path;

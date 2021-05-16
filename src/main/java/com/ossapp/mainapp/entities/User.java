@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "users_tbl")
-public class Users extends BaseEntity {
+public class User extends BaseEntity {
 
     @Column(name = "phone_fld")
     @Pattern(regexp = "^((\\+7)+([0-9]){10})$")
