@@ -7,16 +7,9 @@ import java.util.Collection;
 
 @Data
 @Entity
-@Table(name = "level_style_tbl")
+@Table(name = "styles_tbl")
 public class Style extends BaseEntity {
 
-    @Column(name = "value")
-    private Integer value;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_styles_tbl",
-            joinColumns = @JoinColumn(name = "style_id"),
-            inverseJoinColumns = @JoinColumn(name = "level_id"))
-    private Collection<LevelStyle> styles;
-
+    @Column(name = "name_fld")
+    private String name;
 }
