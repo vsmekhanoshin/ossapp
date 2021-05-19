@@ -42,11 +42,11 @@ public class User extends BaseEntity {
     @JsonIgnore
     private List<UserImages> images;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_styles_tbl",
+    @ManyToMany
+    @JoinTable(name = "user_us_tbl",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "style_id"))
-    private Collection<Style> styles;
+            inverseJoinColumns = @JoinColumn(name = "us_id"))
+    private List<Quality> qualities;
 
     public void addImage(UserImages userImages) {
         if (userImages == null) {
@@ -54,5 +54,4 @@ public class User extends BaseEntity {
         }
         images.add(userImages);
     }
-
 }
