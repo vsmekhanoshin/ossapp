@@ -1,7 +1,8 @@
-package com.ossapp.mainapp.service;
+package com.ossapp.mainapp.service.impl;
 
 import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.repositories.UserRepository;
+import com.ossapp.mainapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,11 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
