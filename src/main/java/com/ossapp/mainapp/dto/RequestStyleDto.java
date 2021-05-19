@@ -14,7 +14,7 @@ public class RequestStyleDto {
 
     public Style fromRequestStyleToStyle(RequestStyleDto requestStyleDto) {
         Style style = new Style();
-        style.setValue(requestStyleDto.getValue());
+//        style.setValue(requestStyleDto.getValue());
         return style;
     }
 }

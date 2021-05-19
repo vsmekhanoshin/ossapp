@@ -38,7 +38,7 @@ public class StyleServiceImpl implements StyleService {
     @Override
     public Style update(RequestStyleDto requestStyleDto, long id) {
         Optional<Style> styleOptional = styleRepository.findById(id);
-        styleOptional.get().setValue(requestStyleDto.getValue());
+//        styleOptional.get().setValue(requestStyleDto.getValue());
         return styleRepository.save(styleOptional.get());
     }
 
