@@ -6,6 +6,7 @@ import com.sun.istack.NotNull;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +17,13 @@ import java.util.List;
 @Entity
 @Table(name = "users_tbl")
 public class User extends BaseEntity {
+
+    @Column(name = "mail_fld")
+    @Email
+    private String mail;
+
+    @Column(name = "password_fld")
+    private String password;
 
     @Column(name = "phone_fld")
     @Pattern(regexp = "^((\\+7)+([0-9]){10})$")
