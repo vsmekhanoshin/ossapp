@@ -6,7 +6,6 @@ import lombok.Data;
 
 import javax.validation.constraints.*;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class RequestUserDto {
@@ -22,6 +21,8 @@ public class RequestUserDto {
     @NotNull
     private String name;
 
+    private String nickTelegram;
+
     private String phone;
 
     @Min (1)
@@ -36,8 +37,7 @@ public class RequestUserDto {
 
     @NotNull
     @Size(max = 3)
-    //TODO какой List
-    private List<Map<Long, List<Long>>> styleLevel;
+    private List<List<Long>> styleLevelList;
 
     private String about;
 

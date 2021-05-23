@@ -5,12 +5,14 @@ import com.ossapp.mainapp.entities.City;
 import com.ossapp.mainapp.entities.PkUserStyleLevelId;
 import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.entities.UserStyle;
-import com.ossapp.mainapp.repositories.*;
+import com.ossapp.mainapp.repositories.CityRepository;
+import com.ossapp.mainapp.repositories.StyleLevelRepository;
+import com.ossapp.mainapp.repositories.UserRepository;
+import com.ossapp.mainapp.repositories.UserStyleRepository;
 import com.ossapp.mainapp.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,31 +37,31 @@ public class UserServiceImpl implements UserService {
         Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());
         User user = requestUserDto.fromRequestUserToUser(requestUserDto, cityOpt.get());
 
-        List<UserStyle> userStyleList = requestUserDto.getStyleLevel().stream()
-                .forEach(u -> );
+        if (requestUserDto.getStyleLevelList().size() > 3){
+            System.out.println("Ошибка: в Листе Юзер-Стиль больше 3 значений");
+        }
+
+        requestUserDto.getStyleLevelList().stream()
+                .forEach(u -> saveUserStyle(u, user));
 
         return null;
     }
 
-    private void saveUserStyle(Map<Long, List<Long>> styleLevelMap, User user){
-
-        for (int i = 0; i < styleLevelMap.size(); i++) {
-            long styleId = styleLevelMap.get(i).get(1);
-            long LevelId = styleLevelMap.get(i).get(2);
-
-            long styleLevelId = styleLevelRepository.findById()
-
+    private void saveUserStyle(List<Long> styleLevelList, User user) {
+        if (styleLevelList.size() > 2) {
+            System.out.println("Ошибка: в Листе Стиль-Левел больше 2 значений");
         }
+        long styleId = styleLevelList.get(0);
+        long levelId = styleLevelList.get(1);
+        long styleLevelId = styleLevelRepository.findByStyleIdAndLevelId(styleId, levelId);
 
         PkUserStyleLevelId pkUserStyleLevelId = new PkUserStyleLevelId();
         pkUserStyleLevelId.setUserId(user.getId());
-        //TODO найти по id style and id level
-        pkUserStyleLevelId.setStyleLevelId();
+        pkUserStyleLevelId.setStyleLevelId(styleLevelId);
 
         UserStyle userStyle = new UserStyle();
         userStyle.setPkUserStyleLevelId(pkUserStyleLevelId);
-
-        styleLevelRepositoryy.save(userStyle);
+        userStyleRepository.save(userStyle);
     }
 
     @Override

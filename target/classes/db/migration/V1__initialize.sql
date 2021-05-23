@@ -43,15 +43,15 @@ CREATE TABLE `level`
 DROP TABLE IF EXISTS `style_level`;
 CREATE TABLE `style_level`
 (
-    `id`       smallint unsigned NOT NULL AUTO_INCREMENT,
-    `style_id` smallint unsigned NOT NULL,
-    `level_id` smallint unsigned NOT NULL,
+    `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
+    `style_id`  smallint unsigned NOT NULL,
+    `level_id`  smallint unsigned NOT NULL,
     `create_at` TIMESTAMP NOT NULL,
     `update_at` TIMESTAMP NOT NULL,
     `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`id`),
-    KEY        `us_style_fk_idx` (`style_id`),
-    KEY        `us_skill_fk_idx` (`level_id`),
+    KEY         `us_style_fk_idx` (`style_id`),
+    KEY         `us_skill_fk_idx` (`level_id`),
     CONSTRAINT `us_level_fk` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`),
     CONSTRAINT `us_style_fk` FOREIGN KEY (`style_id`) REFERENCES `styles` (`id`)
 ) ENGINE=InnoDB
@@ -61,19 +61,20 @@ CREATE TABLE `style_level`
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`
 (
-    `id`         int unsigned NOT NULL AUTO_INCREMENT,
-    `email`      varchar(90),
-    `password`   varchar(21),
-    `phone`      varchar(45),
-    `name`       varchar(45) NOT NULL,
-    `birth_date` date,
-    `weight`     tinyint unsigned NOT NULL,
-    `sex`        tinyint     NOT NULL,
-    `city_id`    mediumint unsigned NOT NULL,
-    `about`      varchar(16000),
-    `create_at`  TIMESTAMP   NOT NULL,
-    `update_at`  TIMESTAMP   NOT NULL,
-    `active`     BOOLEAN     NOT NULL DEFAULT TRUE,
+    `id`            int unsigned NOT NULL AUTO_INCREMENT,
+    `email`         varchar(90),
+    `password`      varchar(21),
+    `phone`         varchar(45),
+    `name`          varchar(45) NOT NULL,
+    `nick_telegram` varchar(33),
+    `birth_date`    date,
+    `weight`        tinyint unsigned NOT NULL,
+    `sex`           tinyint     NOT NULL,
+    `city_id`       mediumint unsigned NOT NULL,
+    `about`         varchar(16000),
+    `create_at`     TIMESTAMP   NOT NULL,
+    `update_at`     TIMESTAMP   NOT NULL,
+    `active`        BOOLEAN     NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`id`),
     UNIQUE KEY `phone_fld_UNIQUE` (`phone`),
     CONSTRAINT `fk_user_city` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`)
@@ -103,7 +104,7 @@ CREATE TABLE `images_user`
 (
     `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
     `user_id`   int unsigned NOT NULL,
-    `path`  varchar(255) NOT NULL,
+    `path`      varchar(255) NOT NULL,
     `create_at` TIMESTAMP    NOT NULL,
     `update_at` TIMESTAMP    NOT NULL,
     `active`    BOOLEAN      NOT NULL DEFAULT TRUE,

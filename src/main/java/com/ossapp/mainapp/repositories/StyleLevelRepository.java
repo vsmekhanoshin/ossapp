@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StyleLevelRepository extends JpaRepository<StyleLevel, Long> {
 
-    @Query(value = "select id from style_level where style_id = :1 and level_id = :2 ",
+    @Query(value = "select id from style_level where style_id = :styleId and level_id = :levelId ",
             nativeQuery = true)
-    Long findByStyleIdAndLevelId(Long styleId, Long leveld);
+    Long findByStyleIdAndLevelId(Long styleId, Long levelId);
 }

@@ -1376,25 +1376,29 @@ style_level_id</ColNames>
       <NotNull>1</NotNull>
       <DefaultExpression>1</DefaultExpression>
     </column>
-    <index id="375" parent="299" name="phone_fld_UNIQUE">
+    <column id="375" parent="299" name="nick_telegram">
+      <Position>14</Position>
+      <DataType>varchar(33)|0s</DataType>
+    </column>
+    <index id="376" parent="299" name="phone_fld_UNIQUE">
       <ColNames>phone</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <index id="376" parent="299" name="fk_user_city">
+    <index id="377" parent="299" name="fk_user_city">
       <ColNames>city_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="377" parent="299" name="PRIMARY">
+    <key id="378" parent="299" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="378" parent="299" name="phone_fld_UNIQUE">
+    <key id="379" parent="299" name="phone_fld_UNIQUE">
       <ColNames>phone</ColNames>
       <UnderlyingIndexName>phone_fld_UNIQUE</UnderlyingIndexName>
     </key>
-    <foreign-key id="379" parent="299" name="fk_user_city">
+    <foreign-key id="380" parent="299" name="fk_user_city">
       <ColNames>city_id</ColNames>
       <RefTableName>cities</RefTableName>
       <RefColNames>id</RefColNames>
