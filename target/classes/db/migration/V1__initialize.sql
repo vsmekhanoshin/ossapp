@@ -66,7 +66,7 @@ CREATE TABLE `users`
     `password`      varchar(21),
     `phone`         varchar(45),
     `name`          varchar(45) NOT NULL,
-    `nick_telegram` varchar(33),
+--     `nick_telegram` varchar(33),
     `birth_date`    date,
     `weight`        tinyint unsigned NOT NULL,
     `sex`           tinyint     NOT NULL,

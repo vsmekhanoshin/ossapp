@@ -36,7 +36,7 @@ public class RequestUserDto {
     private long cityId;
 
     @NotNull
-    @Size(max = 3)
+    @Size(min = 1, max = 3)
     private List<List<Long>> styleLevelList;
 
     private String about;
@@ -47,6 +47,7 @@ public class RequestUserDto {
         user.setPassword(requestStyleDto.getPassword());
         user.setPhone(requestStyleDto.getPhone());
         user.setName(requestStyleDto.getName());
+        user.setNickTelegram(requestStyleDto.getNickTelegram());
         user.setWeight(requestStyleDto.getWeight());
         user.setSex(requestStyleDto.getSex());
         user.setCityId(city);

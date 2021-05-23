@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "users")
 public class User extends BaseEntity {
 
-    @Column(name = "mail")
+    @Column(name = "email")
     @Email
     private String email;
 
@@ -46,8 +46,8 @@ public class User extends BaseEntity {
     @Column(name = "sex")
     private Integer sex;
 
-    @ManyToOne
-    @Column(name = "city_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
     private City cityId;
 
     @Column(name = "about")

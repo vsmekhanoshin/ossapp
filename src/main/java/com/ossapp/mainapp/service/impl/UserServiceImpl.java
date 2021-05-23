@@ -1,10 +1,7 @@
 package com.ossapp.mainapp.service.impl;
 
 import com.ossapp.mainapp.dto.RequestUserDto;
-import com.ossapp.mainapp.entities.City;
-import com.ossapp.mainapp.entities.PkUserStyleLevelId;
-import com.ossapp.mainapp.entities.User;
-import com.ossapp.mainapp.entities.UserStyle;
+import com.ossapp.mainapp.entities.*;
 import com.ossapp.mainapp.repositories.CityRepository;
 import com.ossapp.mainapp.repositories.StyleLevelRepository;
 import com.ossapp.mainapp.repositories.UserRepository;
@@ -37,6 +34,8 @@ public class UserServiceImpl implements UserService {
         Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());
         User user = requestUserDto.fromRequestUserToUser(requestUserDto, cityOpt.get());
 
+        userRepository.save(user);
+
         if (requestUserDto.getStyleLevelList().size() > 3){
             System.out.println("Ошибка: в Листе Юзер-Стиль больше 3 значений");
         }
@@ -44,20 +43,20 @@ public class UserServiceImpl implements UserService {
         requestUserDto.getStyleLevelList().stream()
                 .forEach(u -> saveUserStyle(u, user));
 
-        return null;
+        return user;
     }
 
     private void saveUserStyle(List<Long> styleLevelList, User user) {
         if (styleLevelList.size() > 2) {
             System.out.println("Ошибка: в Листе Стиль-Левел больше 2 значений");
         }
-        long styleId = styleLevelList.get(0);
-        long levelId = styleLevelList.get(1);
-        long styleLevelId = styleLevelRepository.findByStyleIdAndLevelId(styleId, levelId);
+        long styleId = styleLevelList.get(0); // вид ед-ва
+        long levelId = styleLevelList.get(1); // ур-нь маст-ва
+        Long styleLevelId = styleLevelRepository.findByStyleIdAndLevelId(styleId, levelId);
 
         PkUserStyleLevelId pkUserStyleLevelId = new PkUserStyleLevelId();
-        pkUserStyleLevelId.setUserId(user.getId());
-        pkUserStyleLevelId.setStyleLevelId(styleLevelId);
+        pkUserStyleLevelId.setUser_id(user.getId());
+        pkUserStyleLevelId.setStyle_level_id(styleLevelId);
 
         UserStyle userStyle = new UserStyle();
         userStyle.setPkUserStyleLevelId(pkUserStyleLevelId);
