@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 @Data
 @Entity
 @Table(name = "level")
+//TODO Delete
 public class Level extends BaseEntity {
 
     @Min(value = 1, message = "Минимальный уровень 1")

@@ -37,7 +37,8 @@ public class RequestUserDto {
 
     @NotNull
     @Size(min = 1, max = 3)
-    private List<List<Long>> styleLevelList;
+    //TODO Request List<StyleLevel>
+    private List<List<Long>> styleLevelList; // 1,2
 
     private String about;
 

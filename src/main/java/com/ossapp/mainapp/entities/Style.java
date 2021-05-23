@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 @Data
 @Entity
 @Table(name = "styles")
+//TODO Delete
 public class Style extends BaseEntity {
 
     @Column(name = "value")
