@@ -10,8 +10,8 @@ import javax.validation.constraints.Min;
 
 @Data
 @Entity
-@Table(name = "level_style_tbl")
-public class LevelStyle extends BaseEntity {
+@Table(name = "level")
+public class Level extends BaseEntity {
 
     @Min(value = 1, message = "Минимальный уровень 1")
     @Max(value = 5, message = "Максимальный уровень 5")

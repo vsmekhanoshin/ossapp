@@ -15,35 +15,39 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "users_tbl")
+@Table(name = "users")
 public class User extends BaseEntity {
 
-    @Column(name = "mail_fld")
+    @Column(name = "mail")
     @Email
-    private String mail;
+    private String email;
 
-    @Column(name = "password_fld")
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "phone_fld")
+    @Column(name = "phone")
     @Pattern(regexp = "^((\\+7)+([0-9]){10})$")
     private String phone;
 
-    @Column(name = "name_fld")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "birth_date_fld")
+    @Column(name = "birth_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
     @NotNull
     private Date birthDate;
 
-    @Column(name = "weight_fld")
+    @Column(name = "weight")
     private Integer weight;
 
-    @Column(name = "sex_fld")
+    @Column(name = "sex")
     private Integer sex;
 
-    @Column(name = "about_fld")
+    @ManyToOne
+    @Column(name = "city_id")
+    private City cityId;
+
+    @Column(name = "about")
     private String about;
 
     @OneToMany(mappedBy = "userId", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
@@ -51,10 +55,10 @@ public class User extends BaseEntity {
     private List<UserImages> images;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_styles_tbl",
+    @JoinTable(name = "user_styles",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "style_id"))
-    private Collection<Style> styles;
+            inverseJoinColumns = @JoinColumn(name = "style_level_id"))
+    private Collection<StyleLevel> stylesLevels;
 
     public void addImage(UserImages userImages) {
         if (userImages == null) {

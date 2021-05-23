@@ -2,21 +2,19 @@ package com.ossapp.mainapp.entities;
 
 import lombok.Data;
 
-import javax.persistence.*;
-import java.util.Collection;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Data
 @Entity
-@Table(name = "level_style_tbl")
+@Table(name = "styles")
 public class Style extends BaseEntity {
 
     @Column(name = "value")
+    @Min(value = 1, message = "Минимальное значение стиля 1")
+    @Max(value = 9, message = "Максимальное значение стиля 9")
     private Integer value;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_styles_tbl",
-            joinColumns = @JoinColumn(name = "style_id"),
-            inverseJoinColumns = @JoinColumn(name = "level_id"))
-    private Collection<LevelStyle> styles;
-
 }

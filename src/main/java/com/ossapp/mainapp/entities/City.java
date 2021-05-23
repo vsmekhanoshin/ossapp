@@ -9,10 +9,18 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @Entity
-@Table(name = "cities_tbl")
+@Table(name = "cities")
 public class City extends BaseEntity {
 
     @NotBlank (message = "Поле Город не должно быть пустым")
-    @Column(name = "name_fld")
+    @Column(name = "name")
     private String name;
+
+    @NotBlank (message = "Поле Регион не должно быть пустым")
+    @Column(name = "region")
+    private String region;
+
+    @NotBlank (message = "Поле Страна не должно быть пустым")
+    @Column(name = "country")
+    private String country;
 }

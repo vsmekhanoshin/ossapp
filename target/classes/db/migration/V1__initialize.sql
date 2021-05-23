@@ -1,93 +1,114 @@
-DROP TABLE IF EXISTS `cities_tbl`;
-CREATE TABLE `cities_tbl`
+DROP TABLE IF EXISTS `cities`;
+CREATE TABLE `cities`
 (
     `id`        mediumint unsigned NOT NULL AUTO_INCREMENT,
-    `name_fld`  varchar(45)        NOT NULL,
-    `create_at` TIMESTAMP          NOT NULL,
-    `update_at` TIMESTAMP          NOT NULL,
-    `active`    BOOLEAN            NOT NULL DEFAULT TRUE,
+    `name`      varchar(45) NOT NULL,
+    `region`    varchar(45) NOT NULL,
+    `country`   varchar(45) NOT NULL,
+    `create_at` TIMESTAMP   NOT NULL,
+    `update_at` TIMESTAMP   NOT NULL,
+    `active`    BOOLEAN     NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `styles_tbl`;
-CREATE TABLE `styles_tbl`
+DROP TABLE IF EXISTS `styles`;
+CREATE TABLE `styles`
 (
     `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
-    `name_fld`  varchar(45)       NOT NULL,
-    `create_at` TIMESTAMP         NOT NULL,
-    `update_at` TIMESTAMP         NOT NULL,
-    `active`    BOOLEAN           NOT NULL DEFAULT TRUE,
+    `value`     tinyint unsigned NOT NULL,
+    `create_at` TIMESTAMP NOT NULL,
+    `update_at` TIMESTAMP NOT NULL,
+    `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `level_style_tbl`;
-CREATE TABLE `level_style_tbl`
+DROP TABLE IF EXISTS `level`;
+CREATE TABLE `level`
 (
     `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
-    `value`     tinyint unsigned  NOT NULL,
-    `create_at` TIMESTAMP         NOT NULL,
-    `update_at` TIMESTAMP         NOT NULL,
-    `active`    BOOLEAN           NOT NULL DEFAULT TRUE,
+    `value`     tinyint unsigned NOT NULL,
+    `create_at` TIMESTAMP NOT NULL,
+    `update_at` TIMESTAMP NOT NULL,
+    `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `users_tbl`;
-CREATE TABLE `users_tbl`
+
+DROP TABLE IF EXISTS `style_level`;
+CREATE TABLE `style_level`
 (
-    `id`             int unsigned       NOT NULL AUTO_INCREMENT,
-    `phone_fld`      varchar(45)        NOT NULL,
-    `name_fld`       varchar(45)        NOT NULL,
-    `birth_date_fld` date               NOT NULL,
-    `weight_fld`     tinyint unsigned   NOT NULL,
-    `sex_fld`        tinyint            NOT NULL,
-    `city_id`        mediumint unsigned NOT NULL,
-    `about_fld`      varchar(16000)     NOT NULL,
-    `create_at`      TIMESTAMP          NOT NULL,
-    `update_at`      TIMESTAMP          NOT NULL,
-    `active`         BOOLEAN            NOT NULL DEFAULT TRUE,
+    `id`       smallint unsigned NOT NULL AUTO_INCREMENT,
+    `style_id` smallint unsigned NOT NULL,
+    `level_id` smallint unsigned NOT NULL,
+    `create_at` TIMESTAMP NOT NULL,
+    `update_at` TIMESTAMP NOT NULL,
+    `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `phone_fld_UNIQUE` (`phone_fld`),
-    CONSTRAINT `fk_user_city` FOREIGN KEY (`city_id`) REFERENCES `cities_tbl` (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+    KEY        `us_style_fk_idx` (`style_id`),
+    KEY        `us_skill_fk_idx` (`level_id`),
+    CONSTRAINT `us_level_fk` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`),
+    CONSTRAINT `us_style_fk` FOREIGN KEY (`style_id`) REFERENCES `styles` (`id`)
+) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4
+    COLLATE=utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `user_styles_tbl`;
-CREATE TABLE `user_styles_tbl`
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users`
 (
-    `user_id`   int unsigned      NOT NULL,
-    `style_id`  smallint unsigned NOT NULL,
-    `level_id`  smallint unsigned NOT NULL,
-    `create_at` TIMESTAMP         NOT NULL,
-    `update_at` TIMESTAMP         NOT NULL,
-    `active`    BOOLEAN           NOT NULL DEFAULT TRUE,
-    KEY `user_style_key_idx` (`user_id`),
-    KEY `style_user_key_idx` (`style_id`),
-    CONSTRAINT `fk_style_user_key` FOREIGN KEY (`style_id`) REFERENCES `styles_tbl` (`id`),
-    CONSTRAINT `fk_user_style_key` FOREIGN KEY (`user_id`) REFERENCES `users_tbl` (`id`),
-    CONSTRAINT `fk_style_level_key` FOREIGN KEY (`level_id`) REFERENCES `level_style_tbl` (`id`)
+    `id`         int unsigned NOT NULL AUTO_INCREMENT,
+    `email`      varchar(90),
+    `password`   varchar(21),
+    `phone`      varchar(45),
+    `name`       varchar(45) NOT NULL,
+    `birth_date` date,
+    `weight`     tinyint unsigned NOT NULL,
+    `sex`        tinyint     NOT NULL,
+    `city_id`    mediumint unsigned NOT NULL,
+    `about`      varchar(16000),
+    `create_at`  TIMESTAMP   NOT NULL,
+    `update_at`  TIMESTAMP   NOT NULL,
+    `active`     BOOLEAN     NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `phone_fld_UNIQUE` (`phone`),
+    CONSTRAINT `fk_user_city` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
-DROP TABLE IF EXISTS `images_user_tbl`;
-CREATE TABLE `images_user_tbl`
+DROP TABLE IF EXISTS `user_styles`;
+CREATE TABLE `user_styles`
+(
+    `user_id`        int unsigned NOT NULL,
+    `style_level_id` smallint unsigned NOT NULL,
+    `create_at`      TIMESTAMP NOT NULL,
+    `update_at`      TIMESTAMP NOT NULL,
+    `active`         BOOLEAN   NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (`user_id`, `style_level_id`),
+    KEY              `user_style_key_idx` (`user_id`),
+    KEY              `style_user_key_idx` (`style_level_id`),
+    CONSTRAINT `fk_user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+    CONSTRAINT `fk_style_level_key` FOREIGN KEY (`style_level_id`) REFERENCES `style_level` (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `images_user`;
+CREATE TABLE `images_user`
 (
     `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
-    `user_id`   int unsigned      NOT NULL,
-    `path_fld`  varchar(255)      NOT NULL,
-    `create_at` TIMESTAMP         NOT NULL,
-    `update_at` TIMESTAMP         NOT NULL,
-    `active`    BOOLEAN           NOT NULL DEFAULT TRUE,
+    `user_id`   int unsigned NOT NULL,
+    `path`  varchar(255) NOT NULL,
+    `create_at` TIMESTAMP    NOT NULL,
+    `update_at` TIMESTAMP    NOT NULL,
+    `active`    BOOLEAN      NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_image_user_key` FOREIGN KEY (`user_id`) REFERENCES `users_tbl` (`id`)
+    CONSTRAINT `fk_image_user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
-
