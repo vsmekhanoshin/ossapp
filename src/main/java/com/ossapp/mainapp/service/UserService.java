@@ -8,8 +8,9 @@ import java.util.List;
 
 @Service
 public interface UserService {
-
     User save(RequestUserDto requestUserDto);
 
-    List<User> findAll();
+    User findById(Long id);
+
+    List<User> findAll(int page);
 }

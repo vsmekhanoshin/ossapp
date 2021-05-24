@@ -1,5 +1,6 @@
 package com.ossapp.mainapp.service.impl;
 
+<<<<<<< HEAD
 import com.ossapp.mainapp.dto.RequestStyleLevelDto;
 import com.ossapp.mainapp.dto.RequestUserDto;
 import com.ossapp.mainapp.entities.City;
@@ -64,7 +65,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<User> findAll(int page) {
+        if (page < 1L) {
+            page = 0;
+        }
+        return userRepository.findAll(PageRequest.of(page, 1)).getContent();
+    }
+
+    public User findById(Long id) {
+        return userRepository.getOne(id);
     }
 }

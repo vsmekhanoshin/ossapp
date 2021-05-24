@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -20,8 +22,14 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userservice.findAll();
+    public List<User> getAllUsers(@RequestParam(required = false) Map<String, String> requestParams) {
+        int pageNumber = Integer.parseInt(requestParams.getOrDefault("page", "0"));
+        return userService.findAll(pageNumber);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
     @PostMapping

@@ -69,5 +69,4 @@ public class User extends BaseEntity {
         }
         images.add(userImages);
     }
-
 }
