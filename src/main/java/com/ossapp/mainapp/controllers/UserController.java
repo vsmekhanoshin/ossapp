@@ -15,10 +15,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-    private final UserService userservice;
+    private final UserService userService;
 
     public UserController(UserService userService) {
-        this.userservice = userService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -34,7 +34,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<RequestUserDto> post(@RequestBody @Valid RequestUserDto requestUserDto) {
-        userservice.save(requestUserDto);
+        userService.save(requestUserDto);
         return new ResponseEntity<>(requestUserDto, HttpStatus.OK);
     }
 

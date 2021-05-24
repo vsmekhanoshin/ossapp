@@ -1,6 +1,5 @@
 package com.ossapp.mainapp.service.impl;
 
-<<<<<<< HEAD
 import com.ossapp.mainapp.dto.RequestStyleLevelDto;
 import com.ossapp.mainapp.dto.RequestUserDto;
 import com.ossapp.mainapp.entities.City;
