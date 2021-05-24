@@ -4,6 +4,7 @@ import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.repositories.UserRepository;
 import com.ossapp.mainapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,11 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<User> findAll(int page) {
+        if (page < 1L) {
+            page = 0;
+        }
+        return userRepository.findAll(PageRequest.of(page, 1)).getContent();
     }
 
     public User findById(Long id) {
