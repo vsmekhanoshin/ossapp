@@ -1,11 +1,8 @@
 package com.ossapp.mainapp.controllers;
 
 import com.ossapp.mainapp.dto.RequestCityDto;
-import com.ossapp.mainapp.dto.RequestStyleDto;
 import com.ossapp.mainapp.entities.City;
-import com.ossapp.mainapp.entities.Style;
 import com.ossapp.mainapp.service.CityService;
-import com.ossapp.mainapp.service.StyleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

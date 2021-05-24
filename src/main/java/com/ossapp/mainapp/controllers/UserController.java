@@ -1,6 +1,5 @@
 package com.ossapp.mainapp.controllers;
 
-import com.ossapp.mainapp.dto.RequestStyleDto;
 import com.ossapp.mainapp.dto.RequestUserDto;
 import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.service.UserService;

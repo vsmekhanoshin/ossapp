@@ -1,7 +1,5 @@
 package com.ossapp.mainapp.dto;
 
-import com.ossapp.mainapp.entities.Level;
-import com.ossapp.mainapp.entities.Style;
 import com.ossapp.mainapp.entities.StyleLevel;
 import lombok.Data;
 
@@ -10,20 +8,19 @@ import javax.validation.constraints.Min;
 
 @Data
 public class RequestStyleLevelDto {
+
     @Min(1)
-    @Max(9)
-    private Long styleId;
+    @Max(11)
+    private Long style;
 
     @Min(1)
     @Max(4)
-    private Long levelId;
+    private Long level;
 
-    public StyleLevel fromRequestStyleLevelToStyleLevel(
-            RequestStyleLevelDto requestLevelStyleDto,
-            Style style, Level level) {
+    public StyleLevel fromRequestStyleLevelDtoToStyleLevel(RequestStyleLevelDto requestStyleLevelDto) {
         StyleLevel styleLevel = new StyleLevel();
-        styleLevel.setStyleId(style);
-        styleLevel.setLevelId(level);
+        styleLevel.setStyle(requestStyleLevelDto.getStyle());
+        styleLevel.setLevel(requestStyleLevelDto.getLevel());
         return styleLevel;
     }
 }

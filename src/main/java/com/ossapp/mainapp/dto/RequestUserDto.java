@@ -1,10 +1,12 @@
 package com.ossapp.mainapp.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ossapp.mainapp.entities.City;
 import com.ossapp.mainapp.entities.User;
 import lombok.Data;
 
 import javax.validation.constraints.*;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -25,6 +27,9 @@ public class RequestUserDto {
 
     private String phone;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
+    private Date bthDay;
+
     @Min (1)
     private int weight;
 
@@ -37,8 +42,7 @@ public class RequestUserDto {
 
     @NotNull
     @Size(min = 1, max = 3)
-    //TODO Request List<StyleLevel>
-    private List<List<Long>> styleLevelList; // 1,2
+    private List<RequestStyleLevelDto> requestStyleLevelDtoList; // 1,2
 
     private String about;
 

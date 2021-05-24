@@ -9,13 +9,9 @@ import javax.persistence.*;
 @Table(name = "style_level")
 public class StyleLevel extends BaseEntity {
 
-    @ManyToOne
-    @JoinColumn(name ="style_id")
-    //TODO long
-    private Style styleId;
+    @Column(name ="style")
+    private Long style;
 
-    @ManyToOne
-    @JoinColumn(name = "level_id")
-    //TODO long
-    private Level levelId;
+    @Column(name = "level_id")
+    private Long level;
 }

@@ -1,12 +1,8 @@
 package com.ossapp.mainapp.service.impl;
 
 import com.ossapp.mainapp.dto.RequestStyleLevelDto;
-import com.ossapp.mainapp.entities.Level;
-import com.ossapp.mainapp.entities.Style;
 import com.ossapp.mainapp.entities.StyleLevel;
-import com.ossapp.mainapp.repositories.LevelRepository;
 import com.ossapp.mainapp.repositories.StyleLevelRepository;
-import com.ossapp.mainapp.repositories.StyleRepository;
 import com.ossapp.mainapp.service.StyleLevelService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +14,9 @@ import java.util.Optional;
 @Transactional
 public class StyleLevelServiceImpl implements StyleLevelService {
     private final StyleLevelRepository styleLevelRepository;
-    private final StyleRepository styleRepository;
-    private final LevelRepository levelRepository;
 
-    public StyleLevelServiceImpl(StyleLevelRepository styleLevelRepository, StyleRepository styleRepository, LevelRepository levelRepository) {
+    public StyleLevelServiceImpl(StyleLevelRepository styleLevelRepository) {
         this.styleLevelRepository = styleLevelRepository;
-        this.styleRepository = styleRepository;
-        this.levelRepository = levelRepository;
     }
 
     @Override
@@ -34,10 +26,8 @@ public class StyleLevelServiceImpl implements StyleLevelService {
 
     @Override
     public StyleLevel save(RequestStyleLevelDto requestStyleLevelDto) {
-        Optional<Style> styleOpt = styleRepository.findById(requestStyleLevelDto.getStyleId());
-        Optional<Level> levelOpt = levelRepository.findById(requestStyleLevelDto.getLevelId());
         return styleLevelRepository.save(requestStyleLevelDto
-                .fromRequestStyleLevelToStyleLevel(requestStyleLevelDto, styleOpt.get(), levelOpt.get()));
+                .fromRequestStyleLevelDtoToStyleLevel(requestStyleLevelDto));
     }
 
     @Override
@@ -49,11 +39,9 @@ public class StyleLevelServiceImpl implements StyleLevelService {
     @Override
     public StyleLevel update(RequestStyleLevelDto requestStyleLevelDto, long id) {
         Optional<StyleLevel> styleLevelOptional = styleLevelRepository.findById(id);
-        Optional<Style> styleOpt = styleRepository.findById(requestStyleLevelDto.getStyleId());
-        Optional<Level> levelOpt = levelRepository.findById(requestStyleLevelDto.getLevelId());
 
-        styleLevelOptional.get().setStyleId(styleOpt.get());
-        styleLevelOptional.get().setLevelId(levelOpt.get());
+        styleLevelOptional.get().setStyle(requestStyleLevelDto.getStyle());
+        styleLevelOptional.get().setLevel(requestStyleLevelDto.getLevel());
         return styleLevelRepository.save(styleLevelOptional.get());
     }
 

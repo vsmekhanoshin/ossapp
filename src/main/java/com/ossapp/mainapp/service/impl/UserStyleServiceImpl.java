@@ -2,7 +2,6 @@ package com.ossapp.mainapp.service.impl;
 
 import com.ossapp.mainapp.entities.PkUserStyleLevelId;
 import com.ossapp.mainapp.entities.UserStyle;
-import com.ossapp.mainapp.repositories.StyleRepository;
 import com.ossapp.mainapp.repositories.UserStyleRepository;
 import com.ossapp.mainapp.service.UserStyleService;
 import org.springframework.stereotype.Service;
