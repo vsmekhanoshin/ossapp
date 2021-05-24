@@ -13,32 +13,6 @@ CREATE TABLE `cities`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
--- DROP TABLE IF EXISTS `styles`;
--- CREATE TABLE `styles`
--- (
---     `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
---     `value`     tinyint unsigned NOT NULL,
---     `create_at` TIMESTAMP NOT NULL,
---     `update_at` TIMESTAMP NOT NULL,
---     `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
---     PRIMARY KEY (`id`)
--- ) ENGINE = InnoDB
---   DEFAULT CHARSET = utf8mb4
---   COLLATE = utf8mb4_0900_ai_ci;
-
--- DROP TABLE IF EXISTS `level`;
--- CREATE TABLE `level`
--- (
---     `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
---     `value`     tinyint unsigned NOT NULL,
---     `create_at` TIMESTAMP NOT NULL,
---     `update_at` TIMESTAMP NOT NULL,
---     `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
---     PRIMARY KEY (`id`)
--- ) ENGINE = InnoDB
---   DEFAULT CHARSET = utf8mb4
---   COLLATE = utf8mb4_0900_ai_ci;
-
 
 DROP TABLE IF EXISTS `style_level`;
 CREATE TABLE `style_level`
@@ -50,10 +24,6 @@ CREATE TABLE `style_level`
     `update_at` TIMESTAMP NOT NULL,
     `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`id`)
---     KEY         `us_style_fk_idx` (`style_id`),
---     KEY         `us_skill_fk_idx` (`level_id`),
---     CONSTRAINT `us_level_fk` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`),
---     CONSTRAINT `us_style_fk` FOREIGN KEY (`style_id`) REFERENCES `styles` (`id`)
 ) ENGINE=InnoDB
     DEFAULT CHARSET=utf8mb4
     COLLATE=utf8mb4_0900_ai_ci;
@@ -113,3 +83,40 @@ CREATE TABLE `images_user`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
+
+insert into cities (name, region, country, create_at, update_at)
+values ('Москва', 'Московская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Санкт-Петербург', 'Ленинградская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Ростов-на-Дону', 'Ростовская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Нижний Новгород', 'Нижегородская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Тольятти', 'Самарская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Владимир', 'Владимирская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Екатеринбург', 'Свердловская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Калининград', 'Калининградcкая область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Воронеж', 'Воронежская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Владивосток', 'Приморский край', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       ('Волгоград', 'Волгоградская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'));
+
+insert into style_level (style, level, create_at, update_at)
+values (1, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (1, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (1, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (1, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (2, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (2, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (2, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (2, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (3, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (3, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (3, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (3, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (4, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (4, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (4, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (4, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (5, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (5, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (5, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (5, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (6, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (6, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (6, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (6, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (7, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (7, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (7, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (7, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (8, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (8, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (8, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (8, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (9, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (9, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (9, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (9, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (10, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (10, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (10, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (10, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (11, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (11, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
+       (11, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (11, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'));
