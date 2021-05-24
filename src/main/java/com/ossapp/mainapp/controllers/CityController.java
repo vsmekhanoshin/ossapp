@@ -26,7 +26,12 @@ public class CityController {
     }
 
     @GetMapping()
-    public List<City> getAll() {
+    public List<City> getAll(
+//            @RequestParam(value = "word", required = false) String word,
+//            @RequestParam(value = "page", defaultValue = "0") Integer page,
+//            @RequestParam(value = "size", defaultValue = "9") Integer size,
+//            @RequestParam(value = "sort", defaultValue = "acs") String sort
+    ) {
         return cityService.findAll();
     }
 
@@ -41,7 +46,7 @@ public class CityController {
     }
 
     @PutMapping("/{id}")
-    public RequestCityDto update(@RequestBody  @Valid RequestCityDto requestCityDto, @PathVariable("id") long id) {
+    public RequestCityDto update(@RequestBody @Valid RequestCityDto requestCityDto, @PathVariable("id") long id) {
         cityService.update(requestCityDto, id);
         return requestCityDto;
     }
