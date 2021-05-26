@@ -12,6 +12,6 @@ public class StyleLevel extends BaseEntity {
     @Column(name ="style")
     private Long style;
 
-    @Column(name = "level_id")
+    @Column(name = "level")
     private Long level;
 }

@@ -2,19 +2,21 @@ package com.ossapp.mainapp.service.impl;
 
 import com.ossapp.mainapp.dto.RequestStyleLevelDto;
 import com.ossapp.mainapp.dto.RequestUserDto;
-import com.ossapp.mainapp.entities.City;
-import com.ossapp.mainapp.entities.PkUserStyleLevelId;
-import com.ossapp.mainapp.entities.User;
-import com.ossapp.mainapp.entities.UserStyle;
+import com.ossapp.mainapp.dto.UserDto;
+import com.ossapp.mainapp.dto.mappers.UserMapper;
+import com.ossapp.mainapp.entities.*;
 import com.ossapp.mainapp.repositories.CityRepository;
 import com.ossapp.mainapp.repositories.StyleLevelRepository;
 import com.ossapp.mainapp.repositories.UserRepository;
 import com.ossapp.mainapp.repositories.UserStyleRepository;
 import com.ossapp.mainapp.service.UserService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import static com.ossapp.mainapp.dto.mappers.UserMapper.getDtoFromUser;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -64,11 +66,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll(int page) {
+    public List<UserDto> findAll(int page) {
         if (page < 1L) {
             page = 0;
         }
-        return userRepository.findAll(PageRequest.of(page, 1)).getContent();
+        List<User> users = userRepository.findAll(PageRequest.of(page, 5)).getContent();
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user :
+                users) {
+            userDtos.add(getDtoFromUser(user));
+        }
+        return userDtos;
     }
 
     public User findById(Long id) {
