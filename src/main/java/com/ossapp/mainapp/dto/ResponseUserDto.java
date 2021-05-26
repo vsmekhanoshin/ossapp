@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class UserDto {
+public class ResponseUserDto {
     private Long id;
 
     private String email;
@@ -27,7 +27,7 @@ public class UserDto {
 
     private Integer sex;
 
-    private String cityName;
+    private ResponseCityDto city;
 
     private String about;
 
