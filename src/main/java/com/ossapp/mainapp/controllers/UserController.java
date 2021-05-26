@@ -1,7 +1,7 @@
 package com.ossapp.mainapp.controllers;
 
 import com.ossapp.mainapp.dto.RequestUserDto;
-import com.ossapp.mainapp.dto.UserDto;
+import com.ossapp.mainapp.dto.ResponseUserDto;
 import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers(@RequestParam(required = false) Map<String, String> requestParams) {
+    public List<ResponseUserDto> getAllUsers(@RequestParam(required = false) Map<String, String> requestParams) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault("page", "0"));
         return userService.findAll(pageNumber);
     }
