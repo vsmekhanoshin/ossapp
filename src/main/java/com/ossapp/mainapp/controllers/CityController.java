@@ -1,6 +1,7 @@
 package com.ossapp.mainapp.controllers;
 
 import com.ossapp.mainapp.dto.RequestCityDto;
+import com.ossapp.mainapp.dto.ResponseCityDto;
 import com.ossapp.mainapp.entities.City;
 import com.ossapp.mainapp.service.CityService;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/sites")
+@RequestMapping("/api/v1/cities")
 public class CityController {
     private final CityService cityService;
 
@@ -26,7 +27,7 @@ public class CityController {
     }
 
     @GetMapping()
-    public List<City> getAll(
+    public List<ResponseCityDto> getAll(
 //            @RequestParam(value = "word", required = false) String word,
 //            @RequestParam(value = "page", defaultValue = "0") Integer page,
 //            @RequestParam(value = "size", defaultValue = "9") Integer size,
