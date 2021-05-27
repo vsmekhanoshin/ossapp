@@ -71,10 +71,7 @@ public class UserServiceImpl implements UserService {
         }
         List<User> users = userRepository.findAll(PageRequest.of(page, 5)).getContent();
         List<ResponseUserDto> responseUserDtos = new ArrayList<>();
-        for (User user :
-                users) {
-            responseUserDtos.add(getDtoFromUser(user));
-        }
+        users.forEach(u -> responseUserDtos.add(getDtoFromUser(u)));
         return responseUserDtos;
     }
 
