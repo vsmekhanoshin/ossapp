@@ -3,6 +3,7 @@ package com.ossapp.mainapp.service;
 import com.ossapp.mainapp.dto.RequestCityDto;
 import com.ossapp.mainapp.dto.ResponseCityDto;
 import com.ossapp.mainapp.entities.City;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface CityService {
 
     City update(RequestCityDto requestCityDto, long id);
 
-    List<ResponseCityDto> findAll();
+    List<ResponseCityDto> findAll(Specification<City> spec);
 }
