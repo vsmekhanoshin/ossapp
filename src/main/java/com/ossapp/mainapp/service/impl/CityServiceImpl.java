@@ -1,12 +1,15 @@
 package com.ossapp.mainapp.service.impl;
 
 import com.ossapp.mainapp.dto.RequestCityDto;
+import com.ossapp.mainapp.dto.ResponseCityDto;
+import com.ossapp.mainapp.dto.mappers.CityMapper;
 import com.ossapp.mainapp.entities.City;
 import com.ossapp.mainapp.repositories.CityRepository;
 import com.ossapp.mainapp.service.CityService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,7 +46,10 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<City> findAll() {
-        return cityRepository.findAll();
+    public List<ResponseCityDto> findAll() {
+        List<City> cities = cityRepository.findAll();
+        List<ResponseCityDto> responseCityDtos = new ArrayList<>();
+        cities.forEach(c -> responseCityDtos.add(CityMapper.getDtoFromCity(c)));
+        return responseCityDtos;
     }
 }
