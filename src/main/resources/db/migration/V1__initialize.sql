@@ -1,122 +1,136 @@
-DROP TABLE IF EXISTS `cities`;
-CREATE TABLE `cities`
+CREATE TABLE cities
 (
-    `id`        mediumint unsigned NOT NULL AUTO_INCREMENT,
-    `name`      varchar(45) NOT NULL,
-    `region`    varchar(45) NOT NULL,
-    `country`   varchar(45) NOT NULL,
-    `create_at` TIMESTAMP   NOT NULL,
-    `update_at` TIMESTAMP   NOT NULL,
-    `active`    BOOLEAN     NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+    id        serial    NOT NULL,
+    name      varchar   NOT NULL,
+    region    varchar   NOT NULL,
+    country   varchar   NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    update_at TIMESTAMP NOT NULL,
+    active    BOOLEAN   NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (id)
+);
 
-
-DROP TABLE IF EXISTS `style_level`;
-CREATE TABLE `style_level`
+CREATE TABLE style_level
 (
-    `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
-    `style`  smallint unsigned NOT NULL,
-    `level`  smallint unsigned NOT NULL,
-    `create_at` TIMESTAMP NOT NULL,
-    `update_at` TIMESTAMP NOT NULL,
-    `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB
-    DEFAULT CHARSET=utf8mb4
-    COLLATE=utf8mb4_0900_ai_ci;
+    id        serial    NOT NULL,
+    style     int       NOT NULL,
+    level     int       NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    update_at TIMESTAMP NOT NULL,
+    active    BOOLEAN   NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (id)
+);
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE `users`
+CREATE TABLE users
 (
-    `id`            int unsigned NOT NULL AUTO_INCREMENT,
-    `email`         varchar(90),
-    `password`      varchar(21),
-    `phone`         varchar(45),
-    `name`          varchar(45) NOT NULL,
-    `nick_telegram` varchar(33),
-    `birth_date`    date,
-    `weight`        tinyint unsigned NOT NULL,
-    `sex`           tinyint     NOT NULL,
-    `city_id`       mediumint unsigned NOT NULL,
-    `about`         varchar(16000),
-    `create_at`     TIMESTAMP   NOT NULL,
-    `update_at`     TIMESTAMP   NOT NULL,
-    `active`        BOOLEAN     NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `phone_fld_UNIQUE` (`phone`),
-    CONSTRAINT `fk_user_city` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+    id            serial    NOT NULL,
+    email         varchar,
+    password      varchar,
+    phone         varchar,
+    name          varchar   NOT NULL,
+    nick_telegram varchar,
+    birth_date    date,
+    weight        int       NOT NULL,
+    sex           int       NOT NULL,
+    city_id       int       NOT NULL,
+    about         varchar,
+    create_at     TIMESTAMP NOT NULL,
+    update_at     TIMESTAMP NOT NULL,
+    active        BOOLEAN   NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_user_city FOREIGN KEY (city_id) REFERENCES cities (id)
+);
 
-DROP TABLE IF EXISTS `user_styles`;
-CREATE TABLE `user_styles`
+CREATE TABLE user_styles
 (
-    `user_id`        int unsigned NOT NULL,
-    `style_level_id` smallint unsigned NOT NULL,
-    `create_at`      TIMESTAMP NOT NULL,
-    `update_at`      TIMESTAMP NOT NULL,
-    `active`         BOOLEAN   NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (`user_id`, `style_level_id`),
-    KEY              `user_style_key_idx` (`user_id`),
-    KEY              `style_user_key_idx` (`style_level_id`),
-    CONSTRAINT `fk_user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-    CONSTRAINT `fk_style_level_key` FOREIGN KEY (`style_level_id`) REFERENCES `style_level` (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+    user_id        int       NOT NULL,
+    style_level_id int       NOT NULL,
+    create_at      TIMESTAMP NOT NULL,
+    update_at      TIMESTAMP NOT NULL,
+    active         BOOLEAN   NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (user_id, style_level_id),
+    CONSTRAINT fk_user_key FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_style_level_key FOREIGN KEY (style_level_id) REFERENCES style_level (id)
+);
 
-DROP TABLE IF EXISTS `images_user`;
-CREATE TABLE `images_user`
+CREATE TABLE images_user
 (
-    `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
-    `user_id`   int unsigned NOT NULL,
-    `path`      varchar(255) NOT NULL,
-    `create_at` TIMESTAMP    NOT NULL,
-    `update_at` TIMESTAMP    NOT NULL,
-    `active`    BOOLEAN      NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_image_user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_0900_ai_ci;
+    id        serial       NOT NULL,
+    user_id   int          NOT NULL,
+    path      varchar(255) NOT NULL,
+    create_at TIMESTAMP    NOT NULL,
+    update_at TIMESTAMP    NOT NULL,
+    active    BOOLEAN      NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_image_user_key FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
 
 insert into cities (name, region, country, create_at, update_at)
-values ('Москва', 'Московская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Санкт-Петербург', 'Ленинградская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Ростов-на-Дону', 'Ростовская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Нижний Новгород', 'Нижегородская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Тольятти', 'Самарская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Владимир', 'Владимирская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Екатеринбург', 'Свердловская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Калининград', 'Калининградcкая область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Воронеж', 'Воронежская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Владивосток', 'Приморский край', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       ('Волгоград', 'Волгоградская область', 'Россия', DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'));
+values ('Москва', 'Московская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Санкт-Петербург', 'Ленинградская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Ростов-на-Дону', 'Ростовская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Нижний Новгород', 'Нижегородская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Тольятти', 'Самарская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Владимир', 'Владимирская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Екатеринбург', 'Свердловская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Калининград', 'Калининградcкая область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Воронеж', 'Воронежская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Владивосток', 'Приморский край', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       ('Волгоград', 'Волгоградская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00');
 
 insert into style_level (style, level, create_at, update_at)
-values (1, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (1, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (1, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (1, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (2, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (2, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (2, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (2, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (3, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (3, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (3, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (3, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (4, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (4, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (4, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (4, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (5, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (5, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (5, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (5, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (6, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (6, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (6, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (6, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (7, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (7, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (7, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (7, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (8, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (8, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (8, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (8, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (9, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (9, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (9, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (9, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (10, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (10, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (10, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (10, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (11, 1, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (11, 2, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')),
-       (11, 3, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s')), (11, 4, DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'), DATE_FORMAT(NOW(),'%y-%c-%d %H:%i:%s'));
+values (1, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (1, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (1, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (1, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (2, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (2, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (2, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (2, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (3, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (3, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (3, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (3, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (4, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (4, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (4, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (4, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (5, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (5, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (5, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (5, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (6, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (6, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (6, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (6, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (7, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (7, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (7, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (7, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (8, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (8, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (8, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (8, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (9, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (9, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (9, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (9, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (10, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (10, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (10, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (10, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (11, 1, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (11, 2, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (11, 3, '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
+       (11, 4, '2001-09-28 01:00:00', '2001-09-28 01:00:00');
+
+INSERT INTO users
+VALUES (1, 'ololo@ololo.com', '123', '89028090333', 'ololo', '@ololo', '2011-11-11',
+        80, 1, 1,'ololo ololo', '2011-11-10 19:00:00', '2011-11-10 19:00:00'),
+       (2, 'Pisch', '321', '89028080666', 'pisch', '@pisch', '2011-11-11',
+        85, 1, 2, 'pisch pisch', '2011-11-10 19:00:00', '2011-11-10 19:00:00');
+
+INSERT INTO user_styles
+VALUES (1,1,'2011-11-10 19:00:00','2011-11-10 19:00:00'),
+       (2,2,'2011-11-10 19:00:00','2011-11-10 19:00:00');
