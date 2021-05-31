@@ -75,7 +75,9 @@ public class UserServiceImpl implements UserService {
         return responseUserDtos;
     }
 
-    public User findById(Long id) {
-        return userRepository.getOne(id);
+    public ResponseUserDto findById(Long id) {
+        ResponseUserDto responseUserDto = new ResponseUserDto();
+        responseUserDto = getDtoFromUser(userRepository.getOne(id));
+        return responseUserDto;
     }
 }

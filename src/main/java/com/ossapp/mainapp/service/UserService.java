@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserService {
     User save(RequestUserDto requestUserDto);
 
-    User findById(Long id);
+    ResponseUserDto findById(Long id);
 
     List<ResponseUserDto> findAll(int page);
 }
