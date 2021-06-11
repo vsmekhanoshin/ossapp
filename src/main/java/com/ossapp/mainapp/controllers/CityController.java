@@ -35,12 +35,13 @@ public class CityController {
 //            @RequestParam(value = "size", defaultValue = "9") Integer size,
 //            @RequestParam(value = "sort", defaultValue = "acs") String sort
     ) {
+        int pageNumber = Integer.parseInt(requestParams.getOrDefault("page", "0"));
         String cityName = null;
         if(requestParams.containsKey("name")){
             cityName = requestParams.get("name");
         }
         CityFilter cityFilter = new CityFilter(cityName);
-        return cityService.findAll(cityFilter.getSpec());
+        return cityService.findAll(cityFilter.getSpec(), pageNumber);
     }
 
     @GetMapping("/{id}")

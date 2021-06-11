@@ -6,6 +6,7 @@ import com.ossapp.mainapp.dto.mappers.CityMapper;
 import com.ossapp.mainapp.entities.City;
 import com.ossapp.mainapp.repositories.CityRepository;
 import com.ossapp.mainapp.service.CityService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,8 +48,9 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public List<ResponseCityDto> findAll(Specification<City> spec) {
-        List<City> cities = cityRepository.findAll(spec);
+    public List<ResponseCityDto> findAll(Specification<City> spec, int page) {
+        List<City> cities = cityRepository.findAll(spec, PageRequest.of(page, 10)).getContent();
+
         List<ResponseCityDto> responseCityDtos = new ArrayList<>();
         cities.forEach(c -> responseCityDtos.add(CityMapper.getDtoFromCity(c)));
         return responseCityDtos;

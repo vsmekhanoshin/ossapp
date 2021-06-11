@@ -18,5 +18,5 @@ public interface CityService {
 
     City update(RequestCityDto requestCityDto, long id);
 
-    List<ResponseCityDto> findAll(Specification<City> spec);
+    List<ResponseCityDto> findAll(Specification<City> spec, int page);
 }
