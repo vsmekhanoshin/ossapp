@@ -3,6 +3,7 @@ package com.ossapp.mainapp.service;
 import com.ossapp.mainapp.dto.RequestUserDto;
 import com.ossapp.mainapp.dto.ResponseUserDto;
 import com.ossapp.mainapp.entities.User;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface UserService {
 
     ResponseUserDto findById(Long id);
 
-    List<ResponseUserDto> findAll(int page);
+    List<ResponseUserDto> findAll(int page, int size, Specification<User> specification);
 }

@@ -11,17 +11,8 @@ import java.util.List;
 
 @Data
 public class ResponseUserDto {
-    private Long id;
-
-    private String email;
-
-    private String phone;
 
     private String name;
-
-    private String nickTelegram;
-
-    private Date birthDate;
 
     private Integer weight;
 

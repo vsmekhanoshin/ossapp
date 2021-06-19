@@ -1,0 +1,587 @@
+Index: src/main/java/com/ossapp/mainapp/service/UserService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.service;\r\n\r\nimport com.ossapp.mainapp.dto.RequestUserDto;\r\nimport com.ossapp.mainapp.dto.ResponseUserDto;\r\nimport com.ossapp.mainapp.entities.User;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.util.List;\r\n\r\n@Service\r\npublic interface UserService {\r\n    User save(RequestUserDto requestUserDto);\r\n\r\n    ResponseUserDto findById(Long id);\r\n\r\n    List<ResponseUserDto> findAll(int page);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/service/UserService.java b/src/main/java/com/ossapp/mainapp/service/UserService.java
+--- a/src/main/java/com/ossapp/mainapp/service/UserService.java	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ b/src/main/java/com/ossapp/mainapp/service/UserService.java	(date 1622981380862)
+@@ -3,6 +3,7 @@
+ import com.ossapp.mainapp.dto.RequestUserDto;
+ import com.ossapp.mainapp.dto.ResponseUserDto;
+ import com.ossapp.mainapp.entities.User;
++import org.springframework.data.jpa.domain.Specification;
+ import org.springframework.stereotype.Service;
+ 
+ import java.util.List;
+@@ -13,5 +14,5 @@
+ 
+     ResponseUserDto findById(Long id);
+ 
+-    List<ResponseUserDto> findAll(int page);
++    List<ResponseUserDto> findAll(int page, int size, Specification<User> specification);
+ }
+Index: src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.service.impl;\r\n\r\nimport com.ossapp.mainapp.dto.RequestStyleLevelDto;\r\nimport com.ossapp.mainapp.dto.RequestUserDto;\r\nimport com.ossapp.mainapp.dto.ResponseUserDto;\r\nimport com.ossapp.mainapp.entities.*;\r\nimport com.ossapp.mainapp.repositories.CityRepository;\r\nimport com.ossapp.mainapp.repositories.StyleLevelRepository;\r\nimport com.ossapp.mainapp.repositories.UserRepository;\r\nimport com.ossapp.mainapp.repositories.UserStyleRepository;\r\nimport com.ossapp.mainapp.service.UserService;\r\nimport org.springframework.data.domain.PageRequest;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.Optional;\r\nimport static com.ossapp.mainapp.dto.mappers.UserMapper.getDtoFromUser;\r\n\r\n@Service\r\npublic class UserServiceImpl implements UserService {\r\n    private final UserRepository userRepository;\r\n    private final UserStyleRepository userStyleRepository;\r\n    private final StyleLevelRepository styleLevelRepository;\r\n    private final CityRepository cityRepository;\r\n\r\n    public UserServiceImpl(UserRepository userRepository,\r\n                           UserStyleRepository userStyleRepository,\r\n                           StyleLevelRepository styleLevelRepository,\r\n                           CityRepository cityRepository) {\r\n        this.userRepository = userRepository;\r\n        this.userStyleRepository = userStyleRepository;\r\n        this.styleLevelRepository = styleLevelRepository;\r\n        this.cityRepository = cityRepository;\r\n    }\r\n\r\n    @Override\r\n    public User save(RequestUserDto requestUserDto) {\r\n        Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());\r\n        User user = requestUserDto.fromRequestUserToUser(requestUserDto, cityOpt.get());\r\n\r\n        userRepository.save(user);\r\n\r\n        if (requestUserDto.getRequestStyleLevelDtoList().size() > 3) {\r\n            System.out.println(\"Ошибка: в Листе Юзер-Стиль больше 3 значений\");\r\n        }\r\n\r\n        requestUserDto.getRequestStyleLevelDtoList().stream()\r\n                .forEach(u -> saveUserStyle(u, user));\r\n\r\n        return user;\r\n    }\r\n\r\n    private void saveUserStyle(RequestStyleLevelDto requestStyleLevelDto, User user) {\r\n        Long styleLevelId = styleLevelRepository.findByStyleIdAndLevelId\r\n                (requestStyleLevelDto.getStyle(), requestStyleLevelDto.getLevel());\r\n\r\n        PkUserStyleLevelId pkUserStyleLevelId = new PkUserStyleLevelId();\r\n        pkUserStyleLevelId.setUser_id(user.getId());\r\n        pkUserStyleLevelId.setStyle_level_id(styleLevelId);\r\n\r\n        UserStyle userStyle = new UserStyle();\r\n        userStyle.setPkUserStyleLevelId(pkUserStyleLevelId);\r\n        userStyleRepository.save(userStyle);\r\n    }\r\n\r\n    @Override\r\n    public List<ResponseUserDto> findAll(int page) {\r\n        if (page < 1L) {\r\n            page = 0;\r\n        }\r\n        List<User> users = userRepository.findAll(PageRequest.of(page, 5)).getContent();\r\n        List<ResponseUserDto> responseUserDtos = new ArrayList<>();\r\n        users.forEach(u -> responseUserDtos.add(getDtoFromUser(u)));\r\n        return responseUserDtos;\r\n    }\r\n\r\n    public ResponseUserDto findById(Long id) {\r\n        ResponseUserDto responseUserDto = new ResponseUserDto();\r\n        responseUserDto = getDtoFromUser(userRepository.getOne(id));\r\n        return responseUserDto;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java b/src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java
+--- a/src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ b/src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java	(date 1622981783886)
+@@ -9,7 +9,9 @@
+ import com.ossapp.mainapp.repositories.UserRepository;
+ import com.ossapp.mainapp.repositories.UserStyleRepository;
+ import com.ossapp.mainapp.service.UserService;
++import org.springframework.data.domain.Page;
+ import org.springframework.data.domain.PageRequest;
++import org.springframework.data.jpa.domain.Specification;
+ import org.springframework.stereotype.Service;
+ 
+ import java.util.ArrayList;
+@@ -65,16 +67,17 @@
+     }
+ 
+     @Override
+-    public List<ResponseUserDto> findAll(int page) {
++    public Page<ResponseUserDto> findAll(int page, int size, Specification<User> spec) {
+         if (page < 1L) {
+             page = 0;
+         }
+-        List<User> users = userRepository.findAll(PageRequest.of(page, 5)).getContent();
++        Page<User> users = userRepository.findAll(spec, PageRequest.of(page, size));
+         List<ResponseUserDto> responseUserDtos = new ArrayList<>();
+         users.forEach(u -> responseUserDtos.add(getDtoFromUser(u)));
+         return responseUserDtos;
+     }
+ 
++    @Override
+     public ResponseUserDto findById(Long id) {
+         ResponseUserDto responseUserDto = new ResponseUserDto();
+         responseUserDto = getDtoFromUser(userRepository.getOne(id));
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26_[Default_Changelist]/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26_[Default_Changelist]/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26_[Default_Changelist]/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26_[Default_Changelist]/shelved.patch	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ /dev/null	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
+@@ -1,145 +0,0 @@
+-Index: target/classes/application.properties
+-===================================================================
+-diff --git a/target/classes/application.properties b/target/classes/application.properties
+-deleted file mode 100644
+---- a/target/classes/application.properties	(revision 0375ea1b7bb64e30d21eaee4163a0d84a705f42d)
+-+++ /dev/null	(revision 0375ea1b7bb64e30d21eaee4163a0d84a705f42d)
+-@@ -1,14 +0,0 @@
+--server.port=8081
+--
+--spring.jpa.show-sql=true
+--spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+--spring.jpa.hibernate.ddl-auto=none
+--
+--spring.jackson.serialization.indent_output=true
+--
+--spring.thymeleaf.encoding=UTF-8
+--
+--spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+--spring.datasource.url=jdbc:mysql://localhost:3306/ossapp_chema?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+--spring.datasource.username=root
+--spring.datasource.password=rodman129
+-\ No newline at end of file
+-Index: target/classes/db/migration/V1__initialize.sql
+-===================================================================
+-diff --git a/target/classes/db/migration/V1__initialize.sql b/target/classes/db/migration/V1__initialize.sql
+-deleted file mode 100644
+---- a/target/classes/db/migration/V1__initialize.sql	(revision 0375ea1b7bb64e30d21eaee4163a0d84a705f42d)
+-+++ /dev/null	(revision 0375ea1b7bb64e30d21eaee4163a0d84a705f42d)
+-@@ -1,115 +0,0 @@
+--DROP TABLE IF EXISTS `cities`;
+--CREATE TABLE `cities`
+--(
+--    `id`        mediumint unsigned NOT NULL AUTO_INCREMENT,
+--    `name`      varchar(45) NOT NULL,
+--    `region`    varchar(45) NOT NULL,
+--    `country`   varchar(45) NOT NULL,
+--    `create_at` TIMESTAMP   NOT NULL,
+--    `update_at` TIMESTAMP   NOT NULL,
+--    `active`    BOOLEAN     NOT NULL DEFAULT TRUE,
+--    PRIMARY KEY (`id`)
+--) ENGINE = InnoDB
+--  DEFAULT CHARSET = utf8mb4
+--  COLLATE = utf8mb4_0900_ai_ci;
+--
+---- DROP TABLE IF EXISTS `styles`;
+---- CREATE TABLE `styles`
+---- (
+----     `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
+----     `value`     tinyint unsigned NOT NULL,
+----     `create_at` TIMESTAMP NOT NULL,
+----     `update_at` TIMESTAMP NOT NULL,
+----     `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
+----     PRIMARY KEY (`id`)
+---- ) ENGINE = InnoDB
+----   DEFAULT CHARSET = utf8mb4
+----   COLLATE = utf8mb4_0900_ai_ci;
+--
+---- DROP TABLE IF EXISTS `level`;
+---- CREATE TABLE `level`
+---- (
+----     `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
+----     `value`     tinyint unsigned NOT NULL,
+----     `create_at` TIMESTAMP NOT NULL,
+----     `update_at` TIMESTAMP NOT NULL,
+----     `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
+----     PRIMARY KEY (`id`)
+---- ) ENGINE = InnoDB
+----   DEFAULT CHARSET = utf8mb4
+----   COLLATE = utf8mb4_0900_ai_ci;
+--
+--
+--DROP TABLE IF EXISTS `style_level`;
+--CREATE TABLE `style_level`
+--(
+--    `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
+--    `style`  smallint unsigned NOT NULL,
+--    `level`  smallint unsigned NOT NULL,
+--    `create_at` TIMESTAMP NOT NULL,
+--    `update_at` TIMESTAMP NOT NULL,
+--    `active`    BOOLEAN   NOT NULL DEFAULT TRUE,
+--    PRIMARY KEY (`id`)
+----     KEY         `us_style_fk_idx` (`style_id`),
+----     KEY         `us_skill_fk_idx` (`level_id`),
+----     CONSTRAINT `us_level_fk` FOREIGN KEY (`level_id`) REFERENCES `level` (`id`),
+----     CONSTRAINT `us_style_fk` FOREIGN KEY (`style_id`) REFERENCES `styles` (`id`)
+--) ENGINE=InnoDB
+--    DEFAULT CHARSET=utf8mb4
+--    COLLATE=utf8mb4_0900_ai_ci;
+--
+--DROP TABLE IF EXISTS `users`;
+--CREATE TABLE `users`
+--(
+--    `id`            int unsigned NOT NULL AUTO_INCREMENT,
+--    `email`         varchar(90),
+--    `password`      varchar(21),
+--    `phone`         varchar(45),
+--    `name`          varchar(45) NOT NULL,
+--    `nick_telegram` varchar(33),
+--    `birth_date`    date,
+--    `weight`        tinyint unsigned NOT NULL,
+--    `sex`           tinyint     NOT NULL,
+--    `city_id`       mediumint unsigned NOT NULL,
+--    `about`         varchar(16000),
+--    `create_at`     TIMESTAMP   NOT NULL,
+--    `update_at`     TIMESTAMP   NOT NULL,
+--    `active`        BOOLEAN     NOT NULL DEFAULT TRUE,
+--    PRIMARY KEY (`id`),
+--    UNIQUE KEY `phone_fld_UNIQUE` (`phone`),
+--    CONSTRAINT `fk_user_city` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`)
+--) ENGINE = InnoDB
+--  DEFAULT CHARSET = utf8mb4
+--  COLLATE = utf8mb4_0900_ai_ci;
+--
+--DROP TABLE IF EXISTS `user_styles`;
+--CREATE TABLE `user_styles`
+--(
+--    `user_id`        int unsigned NOT NULL,
+--    `style_level_id` smallint unsigned NOT NULL,
+--    `create_at`      TIMESTAMP NOT NULL,
+--    `update_at`      TIMESTAMP NOT NULL,
+--    `active`         BOOLEAN   NOT NULL DEFAULT TRUE,
+--    PRIMARY KEY (`user_id`, `style_level_id`),
+--    KEY              `user_style_key_idx` (`user_id`),
+--    KEY              `style_user_key_idx` (`style_level_id`),
+--    CONSTRAINT `fk_user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+--    CONSTRAINT `fk_style_level_key` FOREIGN KEY (`style_level_id`) REFERENCES `style_level` (`id`)
+--) ENGINE = InnoDB
+--  DEFAULT CHARSET = utf8mb4
+--  COLLATE = utf8mb4_0900_ai_ci;
+--
+--DROP TABLE IF EXISTS `images_user`;
+--CREATE TABLE `images_user`
+--(
+--    `id`        smallint unsigned NOT NULL AUTO_INCREMENT,
+--    `user_id`   int unsigned NOT NULL,
+--    `path`      varchar(255) NOT NULL,
+--    `create_at` TIMESTAMP    NOT NULL,
+--    `update_at` TIMESTAMP    NOT NULL,
+--    `active`    BOOLEAN      NOT NULL DEFAULT TRUE,
+--    PRIMARY KEY (`id`),
+--    CONSTRAINT `fk_image_user_key` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+--) ENGINE = InnoDB
+--  DEFAULT CHARSET = utf8mb4
+--  COLLATE = utf8mb4_0900_ai_ci;
+-\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26__Default_Changelist_.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26__Default_Changelist_.xml b/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26__Default_Changelist_.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26__Default_Changelist_.xml	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ /dev/null	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
+@@ -1,169 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_01_06_2021_16_26_[Default_Changelist]" date="1622554028282" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_01_06_2021_16_26_[Default_Changelist]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 01.06.2021 16:26 [Default Changelist]" />
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/controllers/CityController.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/controllers/StyleLevelController.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/entities/UserStyle.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/repositories/CityRepository.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/repositories/UserStyleRepository.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/impl/UserServiceImpl.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/impl/CityServiceImpl.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/controllers/FileUploadController.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/repositories/UserRepository.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/controllers/UserController.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/RunApplication.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/configs/swagger/SwaggerConfig.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/entities/PkUserStyleLevelId.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/entities/UserImages.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/impl/StyleLevelServiceImpl.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/entities/BaseEntity.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/dto/RequestStyleLevelDto.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/UserStyleService.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/flyway.conf" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/CityService.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/UserService.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/entities/User.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/entities/City.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/entities/StyleLevel.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/dto/RequestCityDto.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/impl/ImageSaveServiceImpl.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/dto/RequestUserDto.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/ImageSaveService.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/StyleLevelService.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/repositories/StyleLevelRepository.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-  <binary>
+-    <option name="BEFORE_PATH" value="target/classes/com/ossapp/mainapp/service/impl/UserStyleServiceImpl.class" />
+-    <option name="AFTER_PATH" />
+-    <option name="SHELVED_PATH" />
+-  </binary>
+-</changelist>
+\ No newline at end of file
+Index: src/main/java/com/ossapp/mainapp/repositories/UserRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.repositories;\r\n\r\nimport com.ossapp.mainapp.entities.User;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.stereotype.Repository;\r\n\r\n@Repository\r\npublic interface UserRepository extends JpaRepository<User, Long> {\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/repositories/UserRepository.java b/src/main/java/com/ossapp/mainapp/repositories/UserRepository.java
+--- a/src/main/java/com/ossapp/mainapp/repositories/UserRepository.java	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ b/src/main/java/com/ossapp/mainapp/repositories/UserRepository.java	(date 1622979877462)
+@@ -2,9 +2,12 @@
+ 
+ import com.ossapp.mainapp.entities.User;
+ import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+ import org.springframework.stereotype.Repository;
+ 
++import java.util.List;
++
+ @Repository
+-public interface UserRepository extends JpaRepository<User, Long> {
+-
++public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
++//    List<User> findAllByCityId(long cityId);
+ }
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"MavenProjectsManager\">\r\n    <option name=\"originalFiles\">\r\n      <list>\r\n        <option value=\"$PROJECT_DIR$/pom.xml\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" project-jdk-name=\"11\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ b/.idea/misc.xml	(date 1622977009064)
+@@ -8,7 +8,7 @@
+       </list>
+     </option>
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="liberica-11" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/main/java/com/ossapp/mainapp/repositories/specification/UserSpecs.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/repositories/specification/UserSpecs.java b/src/main/java/com/ossapp/mainapp/repositories/specification/UserSpecs.java
+new file mode 100644
+--- /dev/null	(date 1622979539699)
++++ b/src/main/java/com/ossapp/mainapp/repositories/specification/UserSpecs.java	(date 1622979539699)
+@@ -0,0 +1,12 @@
++package com.ossapp.mainapp.repositories.specification;
++
++import com.ossapp.mainapp.entities.City;
++import com.ossapp.mainapp.entities.User;
++import org.springframework.data.jpa.domain.Specification;
++
++public class UserSpecs {
++    public static Specification<User> equalsCityId(Long cityId) {
++        return (Specification<User>) (root, criteriaQuery, criteriaBuilder)
++                -> criteriaBuilder.or(criteriaBuilder.in(root.get("city_id")).value(cityId));
++    }
++}
+Index: target/classes/flyway.conf
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>flyway.url=jdbc:postgresql://localhost:5432/ossapp\r\nflyway.user=root\r\nflyway.password=rodman129\r\nflyway.schemas=ossapp
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/target/classes/flyway.conf b/target/classes/flyway.conf
+--- a/target/classes/flyway.conf	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ b/target/classes/flyway.conf	(date 1622563326410)
+@@ -1,4 +1,4 @@
+-flyway.url=jdbc:postgresql://localhost:5432/ossapp
+-flyway.user=root
++flyway.url=jdbc:postgresql://localhost:5432/ossapp?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
++flyway.user=postgres
+ flyway.password=rodman129
+-flyway.schemas=ossapp
+\ No newline at end of file
++; flyway.schemas=ossapp
+\ No newline at end of file
+Index: src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.dto;\r\n\r\nimport com.ossapp.mainapp.entities.City;\r\nimport com.ossapp.mainapp.entities.StyleLevel;\r\nimport com.ossapp.mainapp.entities.UserImages;\r\nimport lombok.Data;\r\n\r\nimport java.util.Collection;\r\nimport java.util.Date;\r\nimport java.util.List;\r\n\r\n@Data\r\npublic class ResponseUserDto {\r\n    private Long id;\r\n\r\n    private String email;\r\n\r\n    private String phone;\r\n\r\n    private String name;\r\n\r\n    private String nickTelegram;\r\n\r\n    private Date birthDate;\r\n\r\n    private Integer weight;\r\n\r\n    private Integer sex;\r\n\r\n    private ResponseCityDto city;\r\n\r\n    private String about;\r\n\r\n    private List<UserImages> images;\r\n\r\n    private Collection<StyleLevel> stylesLevels;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java b/src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java
+--- a/src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ b/src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java	(date 1622977414953)
+@@ -11,18 +11,9 @@
+ 
+ @Data
+ public class ResponseUserDto {
+-    private Long id;
+-
+-    private String email;
+-
+-    private String phone;
+ 
+     private String name;
+ 
+-    private String nickTelegram;
+-
+-    private Date birthDate;
+-
+     private Integer weight;
+ 
+     private Integer sex;
+Index: src/main/java/com/ossapp/mainapp/utils/UserFilter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/utils/UserFilter.java b/src/main/java/com/ossapp/mainapp/utils/UserFilter.java
+new file mode 100644
+--- /dev/null	(date 1622980699503)
++++ b/src/main/java/com/ossapp/mainapp/utils/UserFilter.java	(date 1622980699503)
+@@ -0,0 +1,21 @@
++package com.ossapp.mainapp.utils;
++
++import com.ossapp.mainapp.entities.City;
++import com.ossapp.mainapp.entities.User;
++import com.ossapp.mainapp.repositories.specification.CitySpecs;
++import com.ossapp.mainapp.repositories.specification.UserSpecs;
++import lombok.Getter;
++import org.springframework.data.jpa.domain.Specification;
++
++@Getter
++public class UserFilter {
++    private Specification<User> spec;
++
++    public UserFilter(Long cityId) {
++        this.spec = Specification.where(null);
++
++        if (cityId != null) {
++            spec = spec.and(UserSpecs.equalsCityId(cityId));
++        }
++    }
++}
+Index: src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.dto.mappers;\r\n\r\nimport com.ossapp.mainapp.dto.ResponseUserDto;\r\nimport com.ossapp.mainapp.entities.User;\r\nimport static com.ossapp.mainapp.dto.mappers.CityMapper.*;\r\n\r\npublic class UserMapper {\r\n    public static ResponseUserDto getDtoFromUser(User user) {\r\n        ResponseUserDto responseUserDto = new ResponseUserDto();\r\n        responseUserDto.setId(user.getId());\r\n        responseUserDto.setEmail(user.getEmail());\r\n        responseUserDto.setPhone(user.getPhone());\r\n        responseUserDto.setName(user.getName());\r\n        responseUserDto.setNickTelegram(user.getNickTelegram());\r\n        responseUserDto.setBirthDate(user.getBirthDate());\r\n        responseUserDto.setWeight(user.getWeight());\r\n        responseUserDto.setSex(user.getSex());\r\n        responseUserDto.setCity(getDtoFromCity(user.getCityId()));\r\n        responseUserDto.setAbout(user.getAbout());\r\n        responseUserDto.setImages(user.getImages());\r\n        responseUserDto.setStylesLevels(user.getStylesLevels());\r\n        return responseUserDto;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java b/src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java
+--- a/src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ b/src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java	(date 1622977780998)
+@@ -7,12 +7,12 @@
+ public class UserMapper {
+     public static ResponseUserDto getDtoFromUser(User user) {
+         ResponseUserDto responseUserDto = new ResponseUserDto();
+-        responseUserDto.setId(user.getId());
+-        responseUserDto.setEmail(user.getEmail());
+-        responseUserDto.setPhone(user.getPhone());
++//        responseUserDto.setId(user.getId());
++//        responseUserDto.setEmail(user.getEmail());
++//        responseUserDto.setPhone(user.getPhone());
+         responseUserDto.setName(user.getName());
+-        responseUserDto.setNickTelegram(user.getNickTelegram());
+-        responseUserDto.setBirthDate(user.getBirthDate());
++//        responseUserDto.setNickTelegram(user.getNickTelegram());
++//        responseUserDto.setBirthDate(user.getBirthDate());
+         responseUserDto.setWeight(user.getWeight());
+         responseUserDto.setSex(user.getSex());
+         responseUserDto.setCity(getDtoFromCity(user.getCityId()));
+Index: .idea/dataSources.local.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"dataSourceStorageLocal\" created-in=\"IU-211.7142.45\">\r\n    <data-source name=\"ossapp_chema@localhost [2]\" uuid=\"b6daa888-827c-4c72-ac7b-61143bd0978c\">\r\n      <database-info product=\"MySQL\" version=\"8.0.21\" jdbc-version=\"4.2\" driver-name=\"MySQL Connector/J\" driver-version=\"mysql-connector-java-8.0.21 (Revision: 33f65445a1bcc544eb0120491926484da168f199)\" dbms=\"MYSQL\" exact-version=\"8.0.21\" exact-driver-version=\"8.0\">\r\n        <extra-name-characters>#@</extra-name-characters>\r\n        <identifier-quote-string>`</identifier-quote-string>\r\n      </database-info>\r\n      <case-sensitivity plain-identifiers=\"lower\" quoted-identifiers=\"lower\" />\r\n      <secret-storage>master_key</secret-storage>\r\n      <user-name>root</user-name>\r\n      <schema-mapping>\r\n        <introspection-scope>\r\n          <node kind=\"schema\" qname=\"@\" />\r\n        </introspection-scope>\r\n      </schema-mapping>\r\n    </data-source>\r\n    <data-source name=\"ossapp@localhost\" uuid=\"874d9b91-b854-4c04-acef-b1ec474f606f\">\r\n      <database-info product=\"PostgreSQL\" version=\"13.0\" jdbc-version=\"4.2\" driver-name=\"PostgreSQL JDBC Driver\" driver-version=\"42.2.5\" dbms=\"POSTGRES\" exact-version=\"13.0\" exact-driver-version=\"42.2\">\r\n        <identifier-quote-string>&quot;</identifier-quote-string>\r\n      </database-info>\r\n      <case-sensitivity plain-identifiers=\"lower\" quoted-identifiers=\"exact\" />\r\n      <secret-storage>master_key</secret-storage>\r\n      <user-name>postgres</user-name>\r\n      <schema-mapping>\r\n        <introspection-scope>\r\n          <node kind=\"database\" qname=\"@\">\r\n            <node kind=\"schema\" qname=\"@\" />\r\n          </node>\r\n        </introspection-scope>\r\n      </schema-mapping>\r\n    </data-source>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/dataSources.local.xml b/.idea/dataSources.local.xml
+--- a/.idea/dataSources.local.xml	(revision 42a4881720a9d7d3e09b535502d1d25d868f794e)
++++ b/.idea/dataSources.local.xml	(date 1622974357022)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="dataSourceStorageLocal" created-in="IU-211.7142.45">
++  <component name="dataSourceStorageLocal" created-in="IU-211.7442.40">
+     <data-source name="ossapp_chema@localhost [2]" uuid="b6daa888-827c-4c72-ac7b-61143bd0978c">
+       <database-info product="MySQL" version="8.0.21" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-java-8.0.21 (Revision: 33f65445a1bcc544eb0120491926484da168f199)" dbms="MYSQL" exact-version="8.0.21" exact-driver-version="8.0">
+         <extra-name-characters>#@</extra-name-characters>

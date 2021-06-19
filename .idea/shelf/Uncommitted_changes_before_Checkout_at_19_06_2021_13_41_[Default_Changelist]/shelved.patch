@@ -1,0 +1,201 @@
+Index: src/main/java/com/ossapp/mainapp/repositories/UserRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.repositories;\r\n\r\nimport com.ossapp.mainapp.entities.User;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.stereotype.Repository;\r\n\r\n@Repository\r\npublic interface UserRepository extends JpaRepository<User, Long> {\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/repositories/UserRepository.java b/src/main/java/com/ossapp/mainapp/repositories/UserRepository.java
+--- a/src/main/java/com/ossapp/mainapp/repositories/UserRepository.java	(revision 0174787c42462938825fb42423c180fb2975417f)
++++ b/src/main/java/com/ossapp/mainapp/repositories/UserRepository.java	(date 1624098963210)
+@@ -2,9 +2,12 @@
+ 
+ import com.ossapp.mainapp.entities.User;
+ import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+ import org.springframework.stereotype.Repository;
+ 
++import java.util.List;
++
+ @Repository
+-public interface UserRepository extends JpaRepository<User, Long> {
+-
++public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
++//    List<User> findAllByCityId(long cityId);
+ }
+Index: src/main/java/com/ossapp/mainapp/service/UserService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.service;\r\n\r\nimport com.ossapp.mainapp.dto.RequestUserDto;\r\nimport com.ossapp.mainapp.dto.ResponseUserDto;\r\nimport com.ossapp.mainapp.entities.User;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.util.List;\r\n\r\n@Service\r\npublic interface UserService {\r\n    User save(RequestUserDto requestUserDto);\r\n\r\n    ResponseUserDto findById(Long id);\r\n\r\n    List<ResponseUserDto> findAll(int page);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/service/UserService.java b/src/main/java/com/ossapp/mainapp/service/UserService.java
+--- a/src/main/java/com/ossapp/mainapp/service/UserService.java	(revision 0174787c42462938825fb42423c180fb2975417f)
++++ b/src/main/java/com/ossapp/mainapp/service/UserService.java	(date 1624098962989)
+@@ -3,6 +3,7 @@
+ import com.ossapp.mainapp.dto.RequestUserDto;
+ import com.ossapp.mainapp.dto.ResponseUserDto;
+ import com.ossapp.mainapp.entities.User;
++import org.springframework.data.jpa.domain.Specification;
+ import org.springframework.stereotype.Service;
+ 
+ import java.util.List;
+@@ -13,5 +14,5 @@
+ 
+     ResponseUserDto findById(Long id);
+ 
+-    List<ResponseUserDto> findAll(int page);
++    List<ResponseUserDto> findAll(int page, int size, Specification<User> specification);
+ }
+Index: src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.service.impl;\r\n\r\nimport com.ossapp.mainapp.dto.RequestStyleLevelDto;\r\nimport com.ossapp.mainapp.dto.RequestUserDto;\r\nimport com.ossapp.mainapp.dto.ResponseUserDto;\r\nimport com.ossapp.mainapp.entities.*;\r\nimport com.ossapp.mainapp.repositories.CityRepository;\r\nimport com.ossapp.mainapp.repositories.StyleLevelRepository;\r\nimport com.ossapp.mainapp.repositories.UserRepository;\r\nimport com.ossapp.mainapp.repositories.UserStyleRepository;\r\nimport com.ossapp.mainapp.service.UserService;\r\nimport org.springframework.data.domain.PageRequest;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.Optional;\r\nimport static com.ossapp.mainapp.dto.mappers.UserMapper.getDtoFromUser;\r\n\r\n@Service\r\npublic class UserServiceImpl implements UserService {\r\n    private final UserRepository userRepository;\r\n    private final UserStyleRepository userStyleRepository;\r\n    private final StyleLevelRepository styleLevelRepository;\r\n    private final CityRepository cityRepository;\r\n\r\n    public UserServiceImpl(UserRepository userRepository,\r\n                           UserStyleRepository userStyleRepository,\r\n                           StyleLevelRepository styleLevelRepository,\r\n                           CityRepository cityRepository) {\r\n        this.userRepository = userRepository;\r\n        this.userStyleRepository = userStyleRepository;\r\n        this.styleLevelRepository = styleLevelRepository;\r\n        this.cityRepository = cityRepository;\r\n    }\r\n\r\n    @Override\r\n    public User save(RequestUserDto requestUserDto) {\r\n        Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());\r\n        User user = requestUserDto.fromRequestUserToUser(requestUserDto, cityOpt.get());\r\n\r\n        userRepository.save(user);\r\n\r\n        if (requestUserDto.getRequestStyleLevelDtoList().size() > 3) {\r\n            System.out.println(\"Ошибка: в Листе Юзер-Стиль больше 3 значений\");\r\n        }\r\n\r\n        requestUserDto.getRequestStyleLevelDtoList().stream()\r\n                .forEach(u -> saveUserStyle(u, user));\r\n\r\n        return user;\r\n    }\r\n\r\n    private void saveUserStyle(RequestStyleLevelDto requestStyleLevelDto, User user) {\r\n        Long styleLevelId = styleLevelRepository.findByStyleIdAndLevelId\r\n                (requestStyleLevelDto.getStyle(), requestStyleLevelDto.getLevel());\r\n\r\n        PkUserStyleLevelId pkUserStyleLevelId = new PkUserStyleLevelId();\r\n        pkUserStyleLevelId.setUser_id(user.getId());\r\n        pkUserStyleLevelId.setStyle_level_id(styleLevelId);\r\n\r\n        UserStyle userStyle = new UserStyle();\r\n        userStyle.setPkUserStyleLevelId(pkUserStyleLevelId);\r\n        userStyleRepository.save(userStyle);\r\n    }\r\n\r\n    @Override\r\n    public List<ResponseUserDto> findAll(int page) {\r\n        if (page < 1L) {\r\n            page = 0;\r\n        }\r\n        List<User> users = userRepository.findAll(PageRequest.of(page, 5)).getContent();\r\n        List<ResponseUserDto> responseUserDtos = new ArrayList<>();\r\n        users.forEach(u -> responseUserDtos.add(getDtoFromUser(u)));\r\n        return responseUserDtos;\r\n    }\r\n\r\n    public ResponseUserDto findById(Long id) {\r\n        ResponseUserDto responseUserDto = new ResponseUserDto();\r\n        responseUserDto = getDtoFromUser(userRepository.getOne(id));\r\n        return responseUserDto;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java b/src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java
+--- a/src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java	(revision 0174787c42462938825fb42423c180fb2975417f)
++++ b/src/main/java/com/ossapp/mainapp/service/impl/UserServiceImpl.java	(date 1624098963075)
+@@ -9,7 +9,9 @@
+ import com.ossapp.mainapp.repositories.UserRepository;
+ import com.ossapp.mainapp.repositories.UserStyleRepository;
+ import com.ossapp.mainapp.service.UserService;
++import org.springframework.data.domain.Page;
+ import org.springframework.data.domain.PageRequest;
++import org.springframework.data.jpa.domain.Specification;
+ import org.springframework.stereotype.Service;
+ 
+ import java.util.ArrayList;
+@@ -65,16 +67,17 @@
+     }
+ 
+     @Override
+-    public List<ResponseUserDto> findAll(int page) {
++    public Page<ResponseUserDto> findAll(int page, int size, Specification<User> spec) {
+         if (page < 1L) {
+             page = 0;
+         }
+-        List<User> users = userRepository.findAll(PageRequest.of(page, 5)).getContent();
++        Page<User> users = userRepository.findAll(spec, PageRequest.of(page, size));
+         List<ResponseUserDto> responseUserDtos = new ArrayList<>();
+         users.forEach(u -> responseUserDtos.add(getDtoFromUser(u)));
+         return responseUserDtos;
+     }
+ 
++    @Override
+     public ResponseUserDto findById(Long id) {
+         ResponseUserDto responseUserDto = new ResponseUserDto();
+         responseUserDto = getDtoFromUser(userRepository.getOne(id));
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"MavenProjectsManager\">\r\n    <option name=\"originalFiles\">\r\n      <list>\r\n        <option value=\"$PROJECT_DIR$/pom.xml\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_11\" project-jdk-name=\"11.0.4\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 0174787c42462938825fb42423c180fb2975417f)
++++ b/.idea/misc.xml	(date 1624099050970)
+@@ -8,7 +8,7 @@
+       </list>
+     </option>
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11.0.4" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="liberica-11" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.dto;\r\n\r\nimport com.ossapp.mainapp.entities.City;\r\nimport com.ossapp.mainapp.entities.StyleLevel;\r\nimport com.ossapp.mainapp.entities.UserImages;\r\nimport lombok.Data;\r\n\r\nimport java.util.Collection;\r\nimport java.util.Date;\r\nimport java.util.List;\r\n\r\n@Data\r\npublic class ResponseUserDto {\r\n    private Long id;\r\n\r\n    private String email;\r\n\r\n    private String phone;\r\n\r\n    private String name;\r\n\r\n    private String nickTelegram;\r\n\r\n    private Date birthDate;\r\n\r\n    private Integer weight;\r\n\r\n    private Integer sex;\r\n\r\n    private ResponseCityDto city;\r\n\r\n    private String about;\r\n\r\n    private List<UserImages> images;\r\n\r\n    private Collection<StyleLevel> stylesLevels;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java b/src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java
+--- a/src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java	(revision 0174787c42462938825fb42423c180fb2975417f)
++++ b/src/main/java/com/ossapp/mainapp/dto/ResponseUserDto.java	(date 1624099043138)
+@@ -11,18 +11,9 @@
+ 
+ @Data
+ public class ResponseUserDto {
+-    private Long id;
+-
+-    private String email;
+-
+-    private String phone;
+ 
+     private String name;
+ 
+-    private String nickTelegram;
+-
+-    private Date birthDate;
+-
+     private Integer weight;
+ 
+     private Integer sex;
+Index: src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.ossapp.mainapp.dto.mappers;\r\n\r\nimport com.ossapp.mainapp.dto.ResponseUserDto;\r\nimport com.ossapp.mainapp.entities.User;\r\nimport static com.ossapp.mainapp.dto.mappers.CityMapper.*;\r\n\r\npublic class UserMapper {\r\n    public static ResponseUserDto getDtoFromUser(User user) {\r\n        ResponseUserDto responseUserDto = new ResponseUserDto();\r\n        responseUserDto.setId(user.getId());\r\n        responseUserDto.setEmail(user.getEmail());\r\n        responseUserDto.setPhone(user.getPhone());\r\n        responseUserDto.setName(user.getName());\r\n        responseUserDto.setNickTelegram(user.getNickTelegram());\r\n        responseUserDto.setBirthDate(user.getBirthDate());\r\n        responseUserDto.setWeight(user.getWeight());\r\n        responseUserDto.setSex(user.getSex());\r\n        responseUserDto.setCity(getDtoFromCity(user.getCityId()));\r\n        responseUserDto.setAbout(user.getAbout());\r\n        responseUserDto.setImages(user.getImages());\r\n        responseUserDto.setStylesLevels(user.getStylesLevels());\r\n        return responseUserDto;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java b/src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java
+--- a/src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java	(revision 0174787c42462938825fb42423c180fb2975417f)
++++ b/src/main/java/com/ossapp/mainapp/dto/mappers/UserMapper.java	(date 1624099043248)
+@@ -7,12 +7,12 @@
+ public class UserMapper {
+     public static ResponseUserDto getDtoFromUser(User user) {
+         ResponseUserDto responseUserDto = new ResponseUserDto();
+-        responseUserDto.setId(user.getId());
+-        responseUserDto.setEmail(user.getEmail());
+-        responseUserDto.setPhone(user.getPhone());
++//        responseUserDto.setId(user.getId());
++//        responseUserDto.setEmail(user.getEmail());
++//        responseUserDto.setPhone(user.getPhone());
+         responseUserDto.setName(user.getName());
+-        responseUserDto.setNickTelegram(user.getNickTelegram());
+-        responseUserDto.setBirthDate(user.getBirthDate());
++//        responseUserDto.setNickTelegram(user.getNickTelegram());
++//        responseUserDto.setBirthDate(user.getBirthDate());
+         responseUserDto.setWeight(user.getWeight());
+         responseUserDto.setSex(user.getSex());
+         responseUserDto.setCity(getDtoFromCity(user.getCityId()));
+Index: .idea/dataSources.local.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"dataSourceStorageLocal\" created-in=\"IU-211.7142.45\">\r\n    <data-source name=\"ossapp_chema@localhost [2]\" uuid=\"b6daa888-827c-4c72-ac7b-61143bd0978c\">\r\n      <database-info product=\"\" version=\"\" jdbc-version=\"\" driver-name=\"\" driver-version=\"\" dbms=\"MYSQL\" exact-version=\"0\" />\r\n      <schema-mapping />\r\n    </data-source>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/dataSources.local.xml b/.idea/dataSources.local.xml
+--- a/.idea/dataSources.local.xml	(revision 0174787c42462938825fb42423c180fb2975417f)
++++ b/.idea/dataSources.local.xml	(date 1624099104605)
+@@ -1,9 +1,19 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="dataSourceStorageLocal" created-in="IU-211.7142.45">
++  <component name="dataSourceStorageLocal" created-in="IU-211.7442.40">
+     <data-source name="ossapp_chema@localhost [2]" uuid="b6daa888-827c-4c72-ac7b-61143bd0978c">
+-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" exact-version="0" />
+-      <schema-mapping />
++      <database-info product="MySQL" version="8.0.21" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-java-8.0.21 (Revision: 33f65445a1bcc544eb0120491926484da168f199)" dbms="MYSQL" exact-version="8.0.21" exact-driver-version="8.0">
++        <extra-name-characters>#@</extra-name-characters>
++        <identifier-quote-string>`</identifier-quote-string>
++      </database-info>
++      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
++      <secret-storage>master_key</secret-storage>
++      <user-name>root</user-name>
++      <schema-mapping>
++        <introspection-scope>
++          <node kind="schema" qname="@" />
++        </introspection-scope>
++      </schema-mapping>
+     </data-source>
+   </component>
+ </project>
+\ No newline at end of file

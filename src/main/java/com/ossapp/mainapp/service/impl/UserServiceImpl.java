@@ -9,7 +9,9 @@ import com.ossapp.mainapp.repositories.StyleLevelRepository;
 import com.ossapp.mainapp.repositories.UserRepository;
 import com.ossapp.mainapp.repositories.UserStyleRepository;
 import com.ossapp.mainapp.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -65,16 +67,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ResponseUserDto> findAll(int page) {
+    public Page<ResponseUserDto> findAll(int page, int size, Specification<User> spec) {
         if (page < 1L) {
             page = 0;
         }
-        List<User> users = userRepository.findAll(PageRequest.of(page, 5)).getContent();
+        Page<User> users = userRepository.findAll(spec, PageRequest.of(page, size));
         List<ResponseUserDto> responseUserDtos = new ArrayList<>();
         users.forEach(u -> responseUserDtos.add(getDtoFromUser(u)));
         return responseUserDtos;
     }
 
+    @Override
     public ResponseUserDto findById(Long id) {
         ResponseUserDto responseUserDto = new ResponseUserDto();
         responseUserDto = getDtoFromUser(userRepository.getOne(id));

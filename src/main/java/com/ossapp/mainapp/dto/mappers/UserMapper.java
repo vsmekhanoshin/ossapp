@@ -7,12 +7,12 @@ import static com.ossapp.mainapp.dto.mappers.CityMapper.*;
 public class UserMapper {
     public static ResponseUserDto getDtoFromUser(User user) {
         ResponseUserDto responseUserDto = new ResponseUserDto();
-        responseUserDto.setId(user.getId());
-        responseUserDto.setEmail(user.getEmail());
-        responseUserDto.setPhone(user.getPhone());
+//        responseUserDto.setId(user.getId());
+//        responseUserDto.setEmail(user.getEmail());
+//        responseUserDto.setPhone(user.getPhone());
         responseUserDto.setName(user.getName());
-        responseUserDto.setNickTelegram(user.getNickTelegram());
-        responseUserDto.setBirthDate(user.getBirthDate());
+//        responseUserDto.setNickTelegram(user.getNickTelegram());
+//        responseUserDto.setBirthDate(user.getBirthDate());
         responseUserDto.setWeight(user.getWeight());
         responseUserDto.setSex(user.getSex());
         responseUserDto.setCity(getDtoFromCity(user.getCityId()));
