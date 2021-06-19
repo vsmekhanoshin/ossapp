@@ -23,4 +23,11 @@ public class RequestStyleLevelDto {
         styleLevel.setLevel(requestStyleLevelDto.getLevel());
         return styleLevel;
     }
+
+    public RequestStyleLevelDto fromStyleLevelDtoToRequestStyleLevel(StyleLevel styleLevel) {
+        RequestStyleLevelDto requestStyleLevelDto = new RequestStyleLevelDto();
+        requestStyleLevelDto.setStyle(styleLevel.getStyle());
+        requestStyleLevelDto.setLevel(styleLevel.getLevel());
+        return requestStyleLevelDto;
+    }
 }

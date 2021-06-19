@@ -61,12 +61,12 @@ public class User extends BaseEntity {
     @JoinTable(name = "user_styles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "style_level_id"))
-    private Collection<StyleLevel> stylesLevels;
+    private List<StyleLevel> stylesLevels;
 
-    public void addImage(UserImages userImages) {
-        if (userImages == null) {
-            images = new ArrayList<>();
-        }
-        images.add(userImages);
-    }
+//    public void addImage(UserImages userImages) {
+//        if (userImages == null) {
+//            images = new ArrayList<>();
+//        }
+//        images.add(userImages);
+//    }
 }
