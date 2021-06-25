@@ -30,14 +30,14 @@ public class CityController {
 
     @GetMapping()
     public List<ResponseCityDto> getAll(@RequestParam(required = false) Map<String, String> requestParams
-//            @RequestParam(value = "word", required = false) String word,
+//            @RequestParam(value = "name", required = false) String name,
 //            @RequestParam(value = "page", defaultValue = "0") Integer page,
 //            @RequestParam(value = "size", defaultValue = "9") Integer size,
 //            @RequestParam(value = "sort", defaultValue = "acs") String sort
     ) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault("page", "0"));
         String cityName = null;
-        if(requestParams.containsKey("name")){
+        if (requestParams.containsKey("name")) {
             cityName = requestParams.get("name");
         }
         CityFilter cityFilter = new CityFilter(cityName);

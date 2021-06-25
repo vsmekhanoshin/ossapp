@@ -5,6 +5,8 @@ import com.ossapp.mainapp.entities.StyleLevel;
 import com.ossapp.mainapp.entities.User;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +15,7 @@ public class ResponseUserDto {
 
     private String name;
 
-    //TODO add Age in Entity User
+    //TODO calculate Age on bth
     private Integer age;
 
     private Integer weight;
@@ -36,6 +38,7 @@ public class ResponseUserDto {
         responseUserDto.setSex(user.getSex());
         responseUserDto.setCity(fromRequestCityToCity(city));
         responseUserDto.setStylesLevels(getRequestStyleLevelDtoList(styleLevelList));
+        responseUserDto.setAge(calculateAge(user.getBirthDate()));
         return responseUserDto;
     }
 
@@ -59,5 +62,13 @@ public class ResponseUserDto {
         requestCityDto.setRegion(city.getRegion());
         requestCityDto.setCountry(city.getCountry());
         return requestCityDto;
+    }
+
+    private Integer calculateAge(LocalDate bthDay) {
+        if (bthDay == null) {
+            return null;
+        }
+        LocalDate currentYear = LocalDate.now();
+        return Period.between(bthDay, currentYear).getYears();
     }
 }

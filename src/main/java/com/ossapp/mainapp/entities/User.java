@@ -8,9 +8,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -35,10 +33,11 @@ public class User extends BaseEntity {
     @Column(name = "nick_telegram")
     private String nickTelegram;
 
+    //TODO test LocalDate
     @Column(name = "birth_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @NotNull
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "weight")
     private Integer weight;

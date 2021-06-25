@@ -14,5 +14,7 @@ public interface UserService {
 
     ResponseUserDto findById(Long id);
 
-    List<ResponseUserDto> findAll(int page, int size, Specification<User> specification);
+    Long findCityIdByUserId(Long userId);
+
+    List<ResponseUserDto> findAll(Specification<User> specification, int page, int size);
 }

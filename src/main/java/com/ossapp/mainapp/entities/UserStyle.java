@@ -28,4 +28,5 @@ public class UserStyle {
 
     @Column(name = "active", columnDefinition = "boolean default true", nullable = false)
     private Boolean active = true;
+
 }

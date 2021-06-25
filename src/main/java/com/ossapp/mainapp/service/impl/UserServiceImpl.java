@@ -3,13 +3,15 @@ package com.ossapp.mainapp.service.impl;
 import com.ossapp.mainapp.dto.RequestStyleLevelDto;
 import com.ossapp.mainapp.dto.RequestUserDto;
 import com.ossapp.mainapp.dto.ResponseUserDto;
-import com.ossapp.mainapp.entities.*;
+import com.ossapp.mainapp.entities.City;
+import com.ossapp.mainapp.entities.PkUserStyleLevelId;
+import com.ossapp.mainapp.entities.User;
+import com.ossapp.mainapp.entities.UserStyle;
 import com.ossapp.mainapp.repositories.CityRepository;
 import com.ossapp.mainapp.repositories.StyleLevelRepository;
 import com.ossapp.mainapp.repositories.UserRepository;
 import com.ossapp.mainapp.repositories.UserStyleRepository;
 import com.ossapp.mainapp.service.UserService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static com.ossapp.mainapp.dto.mappers.UserMapper.getDtoFromUser;
 
 @Service
@@ -67,11 +70,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<ResponseUserDto> findAll(int page, int size, Specification<User> spec) {
+    public List<ResponseUserDto> findAll(Specification<User> spec, int page, int size) {
         if (page < 1L) {
             page = 0;
         }
-        Page<User> users = userRepository.findAll(spec, PageRequest.of(page, size));
+        List<User> users = userRepository.findAll(spec, PageRequest.of(page, size)).getContent();
         List<ResponseUserDto> responseUserDtos = new ArrayList<>();
         users.forEach(u -> responseUserDtos.add(getDtoFromUser(u)));
         return responseUserDtos;
@@ -81,5 +84,10 @@ public class UserServiceImpl implements UserService {
     public ResponseUserDto findById(Long id) {
         ResponseUserDto responseUserDto = getDtoFromUser(userRepository.getOne(id));
         return responseUserDto;
+    }
+
+    @Override
+    public Long findCityIdByUserId(Long userId) {
+        return userRepository.findCityIdByUserId(userId);
     }
 }

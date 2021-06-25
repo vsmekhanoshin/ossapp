@@ -5,10 +5,12 @@ import com.ossapp.mainapp.dto.ResponseUserDto;
 import com.ossapp.mainapp.entities.StyleLevel;
 import com.ossapp.mainapp.entities.User;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.ossapp.mainapp.dto.mappers.CityMapper.*;
+import static com.ossapp.mainapp.dto.mappers.CityMapper.getDtoFromCity;
 
 public class UserMapper {
     public static ResponseUserDto getDtoFromUser(User user) {
@@ -18,7 +20,7 @@ public class UserMapper {
 //        responseUserDto.setPhone(user.getPhone());
         responseUserDto.setName(user.getName());
 //        responseUserDto.setNickTelegram(user.getNickTelegram());
-//        responseUserDto.setBirthDate(user.getBirthDate());
+        responseUserDto.setAge(calculateAge(user.getBirthDate()));
         responseUserDto.setWeight(user.getWeight());
         responseUserDto.setSex(user.getSex());
         responseUserDto.setCity(getDtoFromCity(user.getCityId()));
@@ -40,5 +42,13 @@ public class UserMapper {
                 .stream()
                 .map(s -> fromStyleLevelDtoToRequestStyleLevel(s))
                 .collect(Collectors.toList());
+    }
+
+    private static Integer calculateAge(LocalDate bthDay) {
+        if (bthDay == null) {
+            return null;
+        }
+        LocalDate currentYear = LocalDate.now();
+        return Period.between(bthDay, currentYear).getYears();
     }
 }
