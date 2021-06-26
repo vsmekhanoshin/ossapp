@@ -23,10 +23,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @ApiImplicitParams(value = {
-            @ApiImplicitParam(name = "ageBefore", type = "String", required = false, paramType = "query"),
-            @ApiImplicitParam(name = "ageAfter", type = "String", required = false, paramType = "query")
-    })
     @GetMapping
     public List<ResponseUserDto> getAllUsers(@RequestParam(required = false) Map<String, String> requestParams) {
 //            @RequestParam(value = "ageBefore", required = false) Integer ageBefore,
@@ -39,7 +35,6 @@ public class UserController {
 
 //            @RequestParam(value = "page", defaultValue = "0") Integer page,
 //            @RequestParam(value = "size", defaultValue = "9") Integer size,
-//            @RequestParam(value = "sort", defaultValue = "acs") String sort
         int pageNumber = Integer.parseInt(requestParams.getOrDefault("page", "0"));
         int sizeNumber = Integer.parseInt(requestParams.getOrDefault("size", "10"));
 
