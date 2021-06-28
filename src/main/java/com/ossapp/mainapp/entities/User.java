@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -35,10 +36,11 @@ public class User extends BaseEntity {
     @Column(name = "nick_telegram")
     private String nickTelegram;
 
+    //TODO test LocalDate
     @Column(name = "birth_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     @NotNull
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "weight")
     private Integer weight;
@@ -61,12 +63,5 @@ public class User extends BaseEntity {
     @JoinTable(name = "user_styles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "style_level_id"))
-    private Collection<StyleLevel> stylesLevels;
-
-    public void addImage(UserImages userImages) {
-        if (userImages == null) {
-            images = new ArrayList<>();
-        }
-        images.add(userImages);
-    }
+    private List<StyleLevel> stylesLevels;
 }
