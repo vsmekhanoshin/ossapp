@@ -6,7 +6,7 @@ import com.ossapp.mainapp.entities.City;
 public class CityMapper {
     public static ResponseCityDto getDtoFromCity(City city) {
         ResponseCityDto responseCityDto = new ResponseCityDto();
-//        responseCityDto.setId(city.getId());
+        responseCityDto.setId(city.getId());
         responseCityDto.setName(city.getName());
         responseCityDto.setRegion(city.getRegion());
         responseCityDto.setCountry(city.getCountry());
