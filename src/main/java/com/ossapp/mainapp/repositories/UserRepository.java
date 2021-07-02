@@ -8,7 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
-
-    @Query(value = "select city_id from users where id = ?1", nativeQuery = true)
-    Long findCityIdByUserId(Long userId);
 }
