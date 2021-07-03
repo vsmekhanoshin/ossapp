@@ -40,4 +40,12 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    public User() {
+//        super();
+        this.enabled=false;
+    }
 }
