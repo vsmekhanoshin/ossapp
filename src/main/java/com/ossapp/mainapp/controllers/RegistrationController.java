@@ -20,7 +20,7 @@ public class RegistrationController {
     public User showRegistrationForm() {
         UserDto userDto = new UserDto();
         userDto.setEmail("ololoqwerty@dfgh.gom");
-        userDto.setPassword("$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i");
+        userDto.setPassword("100");
         userDto.setUsername("Pisch");
         return userService.registerNewUserAccount(userDto);
     }
