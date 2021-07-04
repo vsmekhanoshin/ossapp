@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/zalupa")
+@RequestMapping("/api/v1/testAuth")
 @AllArgsConstructor
-public class BookController {
+public class TestAuthController {
     @GetMapping
     public String getAllBooks() {
        return "ololo";

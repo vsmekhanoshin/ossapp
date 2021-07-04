@@ -13,13 +13,13 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler
     public ResponseEntity<?> handleRNFException(ResourceNotFoundException e) {
         log.error(e.getMessage());
-        BookServiceError err = new BookServiceError(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        OssAppServiceError err = new OssAppServiceError(HttpStatus.NOT_FOUND.value(), e.getMessage());
         return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> handleJwtExpired(ExpiredJwtException e) {
         log.error("!!!");
-        return new ResponseEntity<>(new BookServiceError(HttpStatus.UNAUTHORIZED.value(), "JWT Token expired"), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new OssAppServiceError(HttpStatus.UNAUTHORIZED.value(), "JWT Token expired"), HttpStatus.UNAUTHORIZED);
     }
 }

@@ -1,3 +1,9 @@
+create table verificationTokens(
+                                   id bigserial,
+
+);
+
+
 create table users
 (
     id bigserial,

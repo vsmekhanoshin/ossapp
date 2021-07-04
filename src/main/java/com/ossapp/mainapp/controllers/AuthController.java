@@ -3,7 +3,7 @@ package com.ossapp.mainapp.controllers;
 import com.ossapp.mainapp.configs.JwtTokenUtil;
 import com.ossapp.mainapp.entities.dto.JwtRequest;
 import com.ossapp.mainapp.entities.dto.JwtResponse;
-import com.ossapp.mainapp.exceptions.BookServiceError;
+import com.ossapp.mainapp.exceptions.OssAppServiceError;
 import com.ossapp.mainapp.service.impl.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class AuthController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         } catch (BadCredentialsException ex) {
-            return new ResponseEntity<>(new BookServiceError(HttpStatus.UNAUTHORIZED.value(), "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new OssAppServiceError(HttpStatus.UNAUTHORIZED.value(), "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
