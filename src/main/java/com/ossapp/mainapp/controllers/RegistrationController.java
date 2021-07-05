@@ -36,9 +36,9 @@ public class RegistrationController {
         return registered;
     }
 
-    @GetMapping("/regitrationConfirm")
+    @GetMapping("/registrationConfirm")
     public String confirmRegistration
-            (WebRequest request, Model model, @RequestParam("token") String token) {
+            (@RequestParam("token") String token) {
 
         Locale locale = Locale.getDefault();
 
