@@ -9,19 +9,23 @@ import java.util.Calendar;
 
 @Entity
 @Data
+@Table(name = "verification_tokens")
 public class VerificationToken {
     private static final int EXPIRATION = 60 * 24;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "token")
     private String token;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "id")
     private User user;
 
+    @Column(name = "expiryDate")
     private Date expiryDate;
 
     public VerificationToken(String token, User user) {
