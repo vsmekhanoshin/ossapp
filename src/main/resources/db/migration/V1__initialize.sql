@@ -1,9 +1,3 @@
-create table verificationTokens(
-                                   id bigserial,
-
-);
-
-
 create table users
 (
     id bigserial,
@@ -33,18 +27,25 @@ CREATE TABLE users_roles
     foreign key (role_id) references roles (id)
 );
 
+create table verification_tokens
+(
+    id bigserial,
+    token varchar(30),
+    user_id bigint NOT NULL,
+    expiryDate date,
+    primary key (id),
+    foreign key (user_id) references users (id)
+);
+
 insert into roles (name)
-values
-('ROLE_USER'),
-('ROLE_ADMIN'),
-('DELETE_USERS_PERMISSION');
+values ('ROLE_USER'),
+       ('ROLE_ADMIN'),
+       ('DELETE_USERS_PERMISSION');
 
 insert into users (username, password, email)
-values
-('Bob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'ololo@gmail.com'),
-('Dob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'hyu@gmail.com');
+values ('Bob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'ololo@gmail.com'),
+       ('Dob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'hyu@gmail.com');
 
 insert into users_roles (user_id, role_id)
-values
-(1, 1),
-(1, 3);
+values (1, 1),
+       (1, 3);
