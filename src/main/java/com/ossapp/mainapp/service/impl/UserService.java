@@ -9,6 +9,7 @@ import com.ossapp.mainapp.repositories.UserRepository;
 import com.ossapp.mainapp.repositories.VerificationTokenRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,16 +27,22 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@NoArgsConstructor
 public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
-
-    @Autowired
+    private PasswordEncoder passwordEncoder;
     private VerificationTokenRepository tokenRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public void setTokenRepository(VerificationTokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
