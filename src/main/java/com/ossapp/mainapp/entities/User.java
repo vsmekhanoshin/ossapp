@@ -27,6 +27,10 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @OneToOne(targetEntity = VerificationToken.class, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "id")
+    private VerificationToken verificationToken;
+
     @ManyToMany
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
