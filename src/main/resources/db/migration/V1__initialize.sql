@@ -6,6 +6,7 @@ create table users
     email      varchar(50) unique,
     created_at timestamp default current_timestamp,
     updated_at timestamp default current_timestamp,
+    enabled    boolean default false,
     primary key (id)
 );
 
