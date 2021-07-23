@@ -2,8 +2,10 @@ package com.ossapp.mainapp.controllers;
 
 import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.service.impl.UserService;
+import com.ossapp.mainapp.service.impl.VerificationTokenService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,26 +18,26 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RegistrationListener implements
         ApplicationListener<OnRegistrationCompleteEvent> {
+    private VerificationTokenService VerificationTokenService;
+    private JavaMailSender javaMailSender;
 
-    private UserService service;
+    @Value("${email.verify.url: http://localhost:8080/register/confirm?token=}")
+    private String confirmationUrl;
 
-    private MessageSource messages;
+    @Value("${spring.mail.username: mailforossapp@gmail.com}")
+    private String emailUsername;
 
-    private JavaMailSender mailSender;
+    @Value("${spring.mail.password: 1234oss*}")
+    private String emailPassword;
 
     @Autowired
-    public void setService(UserService service) {
-        this.service = service;
+    public void setEmailVerificationTokenService(VerificationTokenService VerificationTokenService) {
+        this.VerificationTokenService = VerificationTokenService;
     }
 
     @Autowired
-    public void setMessages(MessageSource messages) {
-        this.messages = messages;
-    }
-
-    @Autowired
-     public void setMailSender(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
+    public void setJavaMailSender(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
     }
 
     @Override
@@ -46,18 +48,15 @@ public class RegistrationListener implements
     private void confirmRegistration(OnRegistrationCompleteEvent event) {
         User user = event.getUser();
         String token = UUID.randomUUID().toString();
-        service.createVerificationToken(user, token);
+        VerificationTokenService.createToken(user, token);
 
         String recipientAddress = user.getEmail();
-        String subject = "Registration Confirmation";
-        String confirmationUrl
-                = event.getAppUrl() + "/registrationConfirm.html?token=" + token;
-        String message = messages.getMessage("message.regSucc", null, event.getLocale());
 
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(recipientAddress);
-        email.setSubject(subject);
-        email.setText(message + "\r\n" + confirmationUrl);
-        mailSender.send(email);
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(emailUsername);
+        message.setTo(recipientAddress);
+        message.setSubject("Confirm your email");
+        message.setText("Suck the big dick \r\n" + confirmationUrl + token);
+        javaMailSender.send(message);
     }
 }

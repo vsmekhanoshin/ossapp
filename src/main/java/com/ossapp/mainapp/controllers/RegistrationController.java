@@ -4,6 +4,7 @@ import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.entities.VerificationToken;
 import com.ossapp.mainapp.entities.dto.UserDto;
 import com.ossapp.mainapp.service.impl.UserService;
+import com.ossapp.mainapp.service.impl.VerificationTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,6 +20,7 @@ import java.util.Locale;
 @RestController
 @AllArgsConstructor
 public class RegistrationController {
+    VerificationTokenService verificationTokenService;
     UserService userService;
 
     @Autowired
@@ -27,12 +29,11 @@ public class RegistrationController {
     @GetMapping("/user")
     public User showRegistrationForm() {
         UserDto userDto = new UserDto();
-        userDto.setEmail("ololoqwerty@dfgh.gom");
+        userDto.setEmail("mailforossapp@gmail.com");
         userDto.setPassword("100");
         userDto.setUsername("Pisch");
         User registered = userService.registerNewUserAccount(userDto);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered,
-                Locale.getDefault(), "https://ossappmortialarts.herokuapp.com"));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered));
         return registered;
     }
 
@@ -50,5 +51,17 @@ public class RegistrationController {
         user.setEnabled(true);
         userService.saveRegisteredUser(user);
         return "success";
+    }
+
+    public User validateEmail(String token) {
+        VerificationToken verificationToken = verificationTokenService.getTokenFromDB(token);
+
+        if (verificationToken == null) throw new RuntimeException("Invalid token!");
+        User user = verificationToken.getUser();
+        Calendar calendar = Calendar.getInstance();
+
+        if (verificationToken.getExpiryDate().getTime() - calendar.getTime().getTime() <= 0) throw new RuntimeException("Token is expired!");
+        user.setEnabled(false);
+        return userService.saveRegisteredUser(user);
     }
 }

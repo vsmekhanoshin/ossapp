@@ -31,9 +31,9 @@ CREATE TABLE users_roles
 create table verification_tokens
 (
     id bigserial,
-    token varchar(30),
-    user_id bigint NOT NULL,
-    expiryDate date,
+    token varchar(255),
+    user_id bigint,
+    expiry_date date,
     primary key (id),
     foreign key (user_id) references users (id)
 );

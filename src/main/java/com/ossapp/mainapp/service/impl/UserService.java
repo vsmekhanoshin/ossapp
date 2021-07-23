@@ -122,7 +122,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void saveRegisteredUser(User user) {
-        userRepository.save(user);
+    public User saveRegisteredUser(User user) {
+        return userRepository.save(user);
     }
 }
