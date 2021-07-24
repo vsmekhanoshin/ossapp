@@ -45,7 +45,7 @@ values ('ROLE_USER'),
 
 insert into users (username, password, email)
 values ('Bob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'ololo@gmail.com'),
-       ('Dob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'hyu@gmail.com');
+       ('Dob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'xyz@gmail.com');
 
 insert into users_roles (user_id, role_id)
 values (1, 1),

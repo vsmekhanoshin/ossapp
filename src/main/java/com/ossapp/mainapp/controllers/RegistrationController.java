@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -26,6 +27,11 @@ public class RegistrationController {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
+    @GetMapping("/get")
+    public List<User> getAll(){
+        return userService.findAll();
+    }
+
     @GetMapping("/user")
     public User showRegistrationForm() {
         UserDto userDto = new UserDto();
@@ -33,35 +39,25 @@ public class RegistrationController {
         userDto.setPassword("100");
         userDto.setUsername("Pisch");
         User registered = userService.registerNewUserAccount(userDto);
+        System.out.println(registered.getId());
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered));
         return registered;
     }
 
     @GetMapping("/registrationConfirm")
-    public String confirmRegistration
+    public User confirmRegistration
             (@RequestParam("token") String token) {
-
-        Locale locale = Locale.getDefault();
-
-        VerificationToken verificationToken = userService.getVerificationToken(token);
-
-        User user = verificationToken.getUser();
-        Calendar cal = Calendar.getInstance();
-
-        user.setEnabled(true);
-        userService.saveRegisteredUser(user);
-        return "success";
-    }
-
-    public User validateEmail(String token) {
         VerificationToken verificationToken = verificationTokenService.getTokenFromDB(token);
 
         if (verificationToken == null) throw new RuntimeException("Invalid token!");
         User user = verificationToken.getUser();
         Calendar calendar = Calendar.getInstance();
 
-        if (verificationToken.getExpiryDate().getTime() - calendar.getTime().getTime() <= 0) throw new RuntimeException("Token is expired!");
-        user.setEnabled(false);
+        if (verificationToken.getExpiryDate().getTime() - calendar.getTime().getTime() <= 0)
+            throw new RuntimeException("Token is expired!");
+        user.setEnabled(true);
+        System.out.println(user.isEnabled());
+        System.out.println(user.getId());
         return userService.saveRegisteredUser(user);
     }
 }

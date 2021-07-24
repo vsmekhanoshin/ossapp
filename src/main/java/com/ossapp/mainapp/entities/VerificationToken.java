@@ -1,5 +1,6 @@
 package com.ossapp.mainapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ public class VerificationToken {
     @Column(name = "token")
     private String token;
 
+    @JsonBackReference
     @OneToOne(targetEntity = User.class)
     @JoinColumn(name = "id")
     private User user;

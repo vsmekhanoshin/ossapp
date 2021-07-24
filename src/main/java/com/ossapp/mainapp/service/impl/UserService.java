@@ -87,8 +87,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = findByUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException(String.format("User '%s' not found", username)));
-        return new org.springframework.security.core.userdetails.User
-                (user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+        org.springframework.security.core.userdetails.User xyuyzer = new org.springframework.security.core.userdetails.User
+                (user.getUsername(), user.getPassword(), user.isEnabled(), true, true, true, mapRolesToAuthorities(user.getRoles()));
+        return xyuyzer;
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
@@ -124,5 +125,9 @@ public class UserService implements UserDetailsService {
 
     public User saveRegisteredUser(User user) {
         return userRepository.save(user);
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

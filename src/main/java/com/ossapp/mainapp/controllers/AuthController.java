@@ -1,6 +1,7 @@
 package com.ossapp.mainapp.controllers;
 
 import com.ossapp.mainapp.configs.JwtTokenUtil;
+import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.entities.dto.JwtRequest;
 import com.ossapp.mainapp.entities.dto.JwtResponse;
 import com.ossapp.mainapp.exceptions.OssAppServiceError;
@@ -38,6 +39,9 @@ public class AuthController {
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
+        User user = userService.findByUsername(userDetails.getUsername()).get();
+        if(!user.isEnabled())
+            return ResponseEntity.ok("Учётка не активирована");
         return ResponseEntity.ok(new JwtResponse(token));
     }
 }

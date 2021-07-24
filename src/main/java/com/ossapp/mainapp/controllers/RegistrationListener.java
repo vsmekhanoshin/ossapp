@@ -21,7 +21,7 @@ public class RegistrationListener implements
     private VerificationTokenService VerificationTokenService;
     private JavaMailSender javaMailSender;
 
-    @Value("${email.verify.url: http://localhost:8080/register/confirm?token=}")
+    @Value("${email.verify.url: http://localhost:8080/registrationConfirm?token=}")
     private String confirmationUrl;
 
     @Value("${spring.mail.username: mailforossapp@gmail.com}")
@@ -56,7 +56,7 @@ public class RegistrationListener implements
         message.setFrom(emailUsername);
         message.setTo(recipientAddress);
         message.setSubject("Confirm your email");
-        message.setText("Suck the big dick \r\n" + confirmationUrl + token);
+        message.setText("Address confirmation \r\n" + confirmationUrl + token);
         javaMailSender.send(message);
     }
 }
