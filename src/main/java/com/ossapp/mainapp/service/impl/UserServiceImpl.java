@@ -37,19 +37,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(RequestUserDto requestUserDto) {
-        Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());
-        User user = requestUserDto.fromRequestUserToUser(requestUserDto, cityOpt.get());
-
-        userRepository.save(user);
-
         if (requestUserDto.getRequestStyleLevelDtoList().size() > 3) {
             System.out.println("Ошибка: в Листе Юзер-Стиль больше 3 значений");
+            return null;
         }
+
+        Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());
+        User user = requestUserDto.fromRequestUserToUser(requestUserDto, cityOpt.get());
 
         requestUserDto.getRequestStyleLevelDtoList().stream()
                 .forEach(u -> saveUserStyle(u, user));
 
-        return user;
+        return userRepository.save(user);
     }
 
     private void saveUserStyle(RequestStyleLevelDto requestStyleLevelDto, User user) {

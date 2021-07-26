@@ -25,16 +25,6 @@ public class UserController {
 
     @GetMapping
     public List<ResponseUserDto> getAllUsers(@RequestParam(required = false) Map<String, String> requestParams) {
-//            @RequestParam(value = "ageBefore", required = false) Integer ageBefore,
-//            @RequestParam(value = "ageAfter", required = false) Integer ageAfter,
-//            @RequestParam(value = "style", required = false) Integer style,
-//            @RequestParam(value = "level", required = false) Integer level,
-//            @RequestParam(value = "sex", required = false) Integer sex,
-//            @RequestParam(value = "weight", required = false) Integer weight,
-//            @RequestParam(value = "cityId", required = false) Integer cityId,
-
-//            @RequestParam(value = "page", defaultValue = "0") Integer page,
-//            @RequestParam(value = "size", defaultValue = "9") Integer size,
         int pageNumber = Integer.parseInt(requestParams.getOrDefault("page", "0"));
         int sizeNumber = Integer.parseInt(requestParams.getOrDefault("size", "10"));
 
