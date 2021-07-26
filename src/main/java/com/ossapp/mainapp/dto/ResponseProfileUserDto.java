@@ -3,45 +3,47 @@ package com.ossapp.mainapp.dto;
 import com.ossapp.mainapp.entities.City;
 import com.ossapp.mainapp.entities.StyleLevel;
 import com.ossapp.mainapp.entities.User;
-import com.ossapp.mainapp.entities.UserImages;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-public class ResponseUserDto {
+public class ResponseProfileUserDto {
 
     private String name;
 
-    private Integer age;
+    private String email;
 
-    private Integer weight;
+    private int age;
 
-    private Integer sex;
+    private String weight;
+
+    private String sex;
 
     private ResponseCityDto city;
 
     private String about;
 
-//    private List<UserImages> images;
+    private String nickTelegram;
 
     private List<RequestStyleLevelDto> stylesLevels;
 
 
-    public ResponseUserDto fromUserToResponseUserDto(User user, List<StyleLevel> styleLevelList, City city) {
-        ResponseUserDto responseUserDto = new ResponseUserDto();
-        responseUserDto.setName(user.getName());
-        responseUserDto.setWeight(user.getWeight());
-        responseUserDto.setSex(user.getSex());
-        responseUserDto.setCity(fromRequestCityToCity(city));
-        responseUserDto.setStylesLevels(getRequestStyleLevelDtoList(styleLevelList));
-        responseUserDto.setAge(calculateAge(user.getBirthDate()));
-        return responseUserDto;
+    public ResponseProfileUserDto fromUserToResponseUserDto(User user, List<StyleLevel> styleLevelList, City city) {
+        ResponseProfileUserDto responseProfileUserDto = new ResponseProfileUserDto();
+        responseProfileUserDto.setName(user.getName());
+        responseProfileUserDto.setEmail(user.getEmail());
+        responseProfileUserDto.setNickTelegram(user.getNickTelegram());
+        responseProfileUserDto.setAge(calculateAge(user.getBirthDate()));
+        responseProfileUserDto.setWeight(AgeUser.getAgeUser(user.getWeight()));
+        responseProfileUserDto.setSex(SexUser.getSexUser(user.getSex()));
+        responseProfileUserDto.setCity(fromRequestCityToCity(city));
+        //TODO вернуть string
+        responseProfileUserDto.setStylesLevels(getRequestStyleLevelDtoList(styleLevelList));
+        return responseProfileUserDto;
     }
 
     private RequestStyleLevelDto fromStyleLevelDtoToRequestStyleLevel(StyleLevel styleLevel) {
@@ -73,4 +75,5 @@ public class ResponseUserDto {
         LocalDate currentYear = LocalDate.now();
         return Period.between(bthDay, currentYear).getYears();
     }
+
 }

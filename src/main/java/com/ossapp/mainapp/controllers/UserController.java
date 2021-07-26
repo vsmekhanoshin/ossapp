@@ -1,6 +1,7 @@
 package com.ossapp.mainapp.controllers;
 
 import com.ossapp.mainapp.dto.RequestUserDto;
+import com.ossapp.mainapp.dto.ResponseProfileUserDto;
 import com.ossapp.mainapp.dto.ResponseUserDto;
 import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.service.UserService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -79,5 +81,14 @@ public class UserController {
         userService.save(requestUserDto);
         return new ResponseEntity<>(requestUserDto, HttpStatus.OK);
     }
+//  TODO
+
+//    @GetMapping("/profile")
+//    public ResponseEntity<ResponseProfileUserDto> getProfileUserById(Principal user) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        User userPrincipal = (CustomUser)authentication.getPrincipal();
+//        long userId = userPrincipal.getUserId();
+//        return new ResponseEntity<>(userService.findMyProfileById(userId), HttpStatus.OK);
+//    }
 
 }

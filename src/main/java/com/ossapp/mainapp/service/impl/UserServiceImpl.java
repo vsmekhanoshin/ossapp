@@ -2,6 +2,7 @@ package com.ossapp.mainapp.service.impl;
 
 import com.ossapp.mainapp.dto.RequestStyleLevelDto;
 import com.ossapp.mainapp.dto.RequestUserDto;
+import com.ossapp.mainapp.dto.ResponseProfileUserDto;
 import com.ossapp.mainapp.dto.ResponseUserDto;
 import com.ossapp.mainapp.entities.*;
 import com.ossapp.mainapp.handkelException.CountStyleOutOfBalanceException;
@@ -83,6 +84,16 @@ public class UserServiceImpl implements UserService {
         ResponseUserDto responseUserDto = getDtoFromUser(userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(String.format("Ошибка: Пользователь с id %s не найден.", id))));
         return responseUserDto;
+    }
+
+    //  TODO
+
+    @Override
+    public ResponseProfileUserDto findMyProfileById(Long id) {
+//        ResponseProfileUserDto dtoProfileUserFromUser = userRepository.findById(id).orElseThrow(
+//                () -> new UserNotFoundException(String.format("Ошибка: Пользователь с id %s не найден.", id)));
+//        return dtoProfileUserFromUser;
+        return null;
     }
 
     @Override
