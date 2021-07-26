@@ -4,6 +4,8 @@ import com.ossapp.mainapp.dto.RequestStyleLevelDto;
 import com.ossapp.mainapp.dto.RequestUserDto;
 import com.ossapp.mainapp.dto.ResponseUserDto;
 import com.ossapp.mainapp.entities.*;
+import com.ossapp.mainapp.handkelException.CountStyleOutOfBalanceException;
+import com.ossapp.mainapp.handkelException.UserNotFoundException;
 import com.ossapp.mainapp.repositories.CityRepository;
 import com.ossapp.mainapp.repositories.StyleLevelRepository;
 import com.ossapp.mainapp.repositories.UserRepository;
@@ -37,9 +39,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(RequestUserDto requestUserDto) {
-        if (requestUserDto.getRequestStyleLevelDtoList().size() > 3) {
-            System.out.println("Ошибка: в Листе Юзер-Стиль больше 3 значений");
-            return null;
+        int sizeStyleList = requestUserDto.getRequestStyleLevelDtoList().size();
+        if (sizeStyleList > 3) {
+            throw new CountStyleOutOfBalanceException(String.format("Ошибка: в листе Юзер-Стиль больше 3 значений - %d",
+                    sizeStyleList));
         }
 
         Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());
@@ -77,7 +80,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseUserDto findById(Long id) {
-        ResponseUserDto responseUserDto = getDtoFromUser(userRepository.getOne(id));
+        ResponseUserDto responseUserDto = getDtoFromUser(userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException(String.format("Ошибка: Пользователь с id %s не найден.", id))));
         return responseUserDto;
     }
 
