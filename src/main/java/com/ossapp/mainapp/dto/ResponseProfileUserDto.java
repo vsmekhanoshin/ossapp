@@ -29,8 +29,7 @@ public class ResponseProfileUserDto {
 
     private String nickTelegram;
 
-    private List<RequestStyleLevelDto> stylesLevels;
-
+    private List<ResponseStyleLevelDto> stylesLevels;
 
     public ResponseProfileUserDto fromUserToResponseUserDto(User user, List<StyleLevel> styleLevelList, City city) {
         ResponseProfileUserDto responseProfileUserDto = new ResponseProfileUserDto();
@@ -38,22 +37,21 @@ public class ResponseProfileUserDto {
         responseProfileUserDto.setEmail(user.getEmail());
         responseProfileUserDto.setNickTelegram(user.getNickTelegram());
         responseProfileUserDto.setAge(calculateAge(user.getBirthDate()));
-        responseProfileUserDto.setWeight(AgeUser.getAgeUser(user.getWeight()));
+        responseProfileUserDto.setWeight(WeightUser.getAgeUser(user.getWeight()));
         responseProfileUserDto.setSex(SexUser.getSexUser(user.getSex()));
         responseProfileUserDto.setCity(fromRequestCityToCity(city));
-        //TODO вернуть string
         responseProfileUserDto.setStylesLevels(getRequestStyleLevelDtoList(styleLevelList));
         return responseProfileUserDto;
     }
 
-    private RequestStyleLevelDto fromStyleLevelDtoToRequestStyleLevel(StyleLevel styleLevel) {
-        RequestStyleLevelDto requestStyleLevelDto = new RequestStyleLevelDto();
-        requestStyleLevelDto.setStyle(styleLevel.getStyle());
-        requestStyleLevelDto.setLevel(styleLevel.getLevel());
-        return requestStyleLevelDto;
+    private ResponseStyleLevelDto fromStyleLevelDtoToRequestStyleLevel(StyleLevel styleLevel) {
+        ResponseStyleLevelDto responseStyleLevelDto = new ResponseStyleLevelDto();
+        responseStyleLevelDto.setStyleName(styleLevel.getStyleName());
+        responseStyleLevelDto.setLevelName(styleLevel.getLevelName());
+        return responseStyleLevelDto;
     }
 
-    private List<RequestStyleLevelDto> getRequestStyleLevelDtoList(List<StyleLevel> styleLevelList) {
+    private List<ResponseStyleLevelDto> getRequestStyleLevelDtoList(List<StyleLevel> styleLevelList) {
         return styleLevelList
                 .stream()
                 .map(s -> fromStyleLevelDtoToRequestStyleLevel(s))
@@ -75,5 +73,4 @@ public class ResponseProfileUserDto {
         LocalDate currentYear = LocalDate.now();
         return Period.between(bthDay, currentYear).getYears();
     }
-
 }

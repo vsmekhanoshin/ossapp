@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 @ToString
-public enum AgeUser {
+public enum WeightUser {
 
     LIGHT("Легкий"),
     MIDDLE("Средний"),
