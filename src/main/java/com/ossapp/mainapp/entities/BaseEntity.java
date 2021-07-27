@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 public class BaseEntity implements Serializable {
 
     @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @SequenceGenerator(name = "sequenceGenerator", sequenceName = "users_id_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

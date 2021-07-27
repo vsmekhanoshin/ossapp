@@ -26,8 +26,8 @@ CREATE TABLE style_level
 CREATE TABLE users
 (
     id            serial    NOT NULL,
-    email         varchar NOT NULL UNIQUE,
-    password      varchar NOT NULL UNIQUE,
+    email         varchar,
+    password      varchar,
     phone         varchar,
     name          varchar   NOT NULL,
     nick_telegram varchar,
@@ -127,24 +127,12 @@ values (1, 'ММА', 1, 'Начинающий', '2001-09-28 01:00:00', '2001-09-
        (11,'Муай-тай', 3, 'Продвинутый', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
        (11,'Муай-тай', 4, 'Профессиональный', '2001-09-28 01:00:00', '2001-09-28 01:00:00');
 
-INSERT INTO users (id,
-                   email,
-                   password,
-                   phone,
-                   name,
-                   nick_telegram,
-                   birth_date,
-                   weight ,
-                   sex,
-                   city_id,
-                   about,
-                   create_at,
-                   update_at)
-VALUES (1, 'ololo@gmail.com', '123', '89028090333', 'ololo', '@ololo', '2011-11-11',
-        80, 1, 1,'ololo', '2011-11-10 19:00:00', '2011-11-10 19:00:00'),
-       (2, 'pisch@mai.ru', '321', '89028080666', 'pisch', '@pisch', '2011-11-11',
-        85, 1, 2, 'pisch', '2011-11-10 19:00:00', '2011-11-10 19:00:00');
-
-INSERT INTO user_styles
-VALUES (1,1,'2011-11-10 19:00:00','2011-11-10 19:00:00'),
-       (2,2,'2011-11-10 19:00:00','2011-11-10 19:00:00');
+--INSERT INTO users
+--VALUES ('ololo@ololo.com', '123', '89028090333', 'ololo', '@ololo', '2011-11-11',
+--        80, 1, 1,'ololo ololo', '2011-11-10 19:00:00', '2011-11-10 19:00:00'),
+--       ('Pisch', '321', '89028080666', 'pisch', '@pisch', '2011-11-11',
+--        85, 1, 2, 'pisch pisch', '2011-11-10 19:00:00', '2011-11-10 19:00:00');
+--
+--INSERT INTO user_styles
+--VALUES (1,1,'2011-11-10 19:00:00','2011-11-10 19:00:00'),
+--       (2,2,'2011-11-10 19:00:00','2011-11-10 19:00:00');

@@ -2,11 +2,11 @@ package com.ossapp.mainapp.service.impl;
 
 import com.ossapp.mainapp.dto.RequestStyleLevelDto;
 import com.ossapp.mainapp.dto.RequestUserDto;
+import com.ossapp.mainapp.dto.ResponseProfileUserDto;
 import com.ossapp.mainapp.dto.ResponseUserDto;
-import com.ossapp.mainapp.entities.City;
-import com.ossapp.mainapp.entities.PkUserStyleLevelId;
-import com.ossapp.mainapp.entities.User;
-import com.ossapp.mainapp.entities.UserStyle;
+import com.ossapp.mainapp.entities.*;
+import com.ossapp.mainapp.handkelException.CountStyleOutOfBalanceException;
+import com.ossapp.mainapp.handkelException.UserNotFoundException;
 import com.ossapp.mainapp.repositories.CityRepository;
 import com.ossapp.mainapp.repositories.StyleLevelRepository;
 import com.ossapp.mainapp.repositories.UserRepository;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static com.ossapp.mainapp.dto.mappers.UserMapper.getDtoFromUser;
 
 @Service
@@ -41,14 +40,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(RequestUserDto requestUserDto) {
+        int sizeStyleList = requestUserDto.getRequestStyleLevelDtoList().size();
+        if (sizeStyleList > 3) {
+            throw new CountStyleOutOfBalanceException(String.format("Ошибка: в листе Юзер-Стиль больше 3 значений - %d",
+                    sizeStyleList));
+        }
+
         Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());
         User user = requestUserDto.fromRequestUserToUser(requestUserDto, cityOpt.get());
 
         userRepository.save(user);
-
-        if (requestUserDto.getRequestStyleLevelDtoList().size() > 3) {
-            System.out.println("Ошибка: в Листе Юзер-Стиль больше 3 значений");
-        }
 
         requestUserDto.getRequestStyleLevelDtoList().stream()
                 .forEach(u -> saveUserStyle(u, user));
@@ -82,8 +83,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseUserDto findById(Long id) {
-        ResponseUserDto responseUserDto = getDtoFromUser(userRepository.getOne(id));
+        ResponseUserDto responseUserDto = getDtoFromUser(userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException(String.format("Ошибка: Пользователь с id %s не найден.", id))));
         return responseUserDto;
+    }
+
+    //  TODO
+
+    @Override
+    public ResponseProfileUserDto findMyProfileById(Long id) {
+//        ResponseProfileUserDto dtoProfileUserFromUser = userRepository.findById(id).orElseThrow(
+//                () -> new UserNotFoundException(String.format("Ошибка: Пользователь с id %s не найден.", id)));
+//        return dtoProfileUserFromUser;
+        return null;
     }
 
     @Override
