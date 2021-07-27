@@ -18,9 +18,9 @@ public enum WeightUser {
     public static String getAgeUser(int weightUser) {
         String weightString = MIDDLE.weight;
 
-        if (weightUser < 60) {
+        if (weightUser < 70) {
             weightString = LIGHT.weight;
-        } else if (weightUser > 90) {
+        } else if (weightUser > 85) {
             weightString = HEAVY.weight;
         }
 
