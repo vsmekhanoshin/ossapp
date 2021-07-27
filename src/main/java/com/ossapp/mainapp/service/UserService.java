@@ -1,6 +1,7 @@
 package com.ossapp.mainapp.service;
 
 import com.ossapp.mainapp.dto.RequestUserDto;
+import com.ossapp.mainapp.dto.ResponseProfileUserDto;
 import com.ossapp.mainapp.dto.ResponseUserDto;
 import com.ossapp.mainapp.entities.User;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,6 +14,8 @@ public interface UserService {
     User save(RequestUserDto requestUserDto);
 
     ResponseUserDto findById(Long id);
+
+    ResponseProfileUserDto findMyProfileById(Long id);
 
     Long findCityIdByUserId(Long userId);
 
