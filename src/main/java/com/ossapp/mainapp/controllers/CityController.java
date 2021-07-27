@@ -30,10 +30,6 @@ public class CityController {
 
     @GetMapping()
     public List<ResponseCityDto> getAll(@RequestParam(required = false) Map<String, String> requestParams
-//            @RequestParam(value = "name", required = false) String name,
-//            @RequestParam(value = "page", defaultValue = "0") Integer page,
-//            @RequestParam(value = "size", defaultValue = "9") Integer size,
-//            @RequestParam(value = "sort", defaultValue = "acs") String sort
     ) {
         int pageNumber = Integer.parseInt(requestParams.getOrDefault("page", "0"));
         String cityName = null;
