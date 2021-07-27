@@ -1,18 +1,14 @@
 package com.ossapp.mainapp.controllers;
 
 import com.ossapp.mainapp.dto.RequestUserDto;
-import com.ossapp.mainapp.dto.ResponseProfileUserDto;
 import com.ossapp.mainapp.dto.ResponseUserDto;
-import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.service.UserService;
 import com.ossapp.mainapp.utils.UserFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 

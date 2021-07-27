@@ -49,10 +49,12 @@ public class UserServiceImpl implements UserService {
         Optional<City> cityOpt = cityRepository.findById(requestUserDto.getCityId());
         User user = requestUserDto.fromRequestUserToUser(requestUserDto, cityOpt.get());
 
+        userRepository.save(user);
+
         requestUserDto.getRequestStyleLevelDtoList().stream()
                 .forEach(u -> saveUserStyle(u, user));
 
-        return userRepository.save(user);
+        return user;
     }
 
     private void saveUserStyle(RequestStyleLevelDto requestStyleLevelDto, User user) {
