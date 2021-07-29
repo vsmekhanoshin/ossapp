@@ -41,10 +41,16 @@
         </dependency>
 
         <dependency>
+<<<<<<< HEAD
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
 <!--            <version>42.2.1</version>-->
+=======
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+>>>>>>> dev_test_email-sender
         </dependency>
 
         <dependency>
@@ -78,6 +84,23 @@
             <version>5.2.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>2.2.6.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -87,6 +110,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.1.1.RELEASE</version>
             </plugin>
+<<<<<<< HEAD
 
 <!--            <plugin>-->
 <!--                <groupId>org.flywaydb</groupId>-->
@@ -112,6 +136,24 @@
                     </processTypes>
                 </configuration>
             </plugin>
+=======
+<!--            <plugin>-->
+<!--                <groupId>com.heroku.sdk</groupId>-->
+<!--                <artifactId>heroku-maven-plugin</artifactId>-->
+<!--                <version>2.0.16</version>-->
+<!--                <configuration>-->
+<!--                    <appName>ossappmortialarts</appName>-->
+<!--                    <includeTarget>false</includeTarget>-->
+<!--                    <includes>-->
+<!--                        <include>target/${project.build.finalName}.jar</include>-->
+<!--                    </includes>-->
+<!--                    <jdkVersion>${java.version}</jdkVersion>-->
+<!--                    <processTypes>-->
+<!--                        <web>java $JAVA_OPTS -jar target/${project.build.finalName}.jar</web>-->
+<!--                    </processTypes>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+>>>>>>> dev_test_email-sender
         </plugins>
     </build>
 </project>

@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/thisshitworksatall")
-public class DeployTestController {
-    @GetMapping
-    public String testDeployment(){
-        return "Ololo";
+@RequestMapping
+public class TestController {
+    @GetMapping("thisshitworksatall")
+    public String get(){
+        return "Works";
     }
 }

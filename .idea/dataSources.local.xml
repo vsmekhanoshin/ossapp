@@ -3,6 +3,15 @@
   <component name="dataSourceStorageLocal" created-in="IU-211.7142.45">
     <data-source name="ossapp_chema@localhost [2]" uuid="b6daa888-827c-4c72-ac7b-61143bd0978c">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" exact-version="0" />
+      <user-name>sa</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" negative="1" />
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+    <data-source name="mydatabase" uuid="219d0088-b608-4a4d-9538-1432224028af">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="H2" exact-version="0" />
       <schema-mapping />
     </data-source>
   </component>

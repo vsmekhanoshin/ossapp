@@ -16,6 +16,12 @@ public class StyleLevel extends BaseEntity {
     @Column(name = "level")
     private Long level;
 
+    @Column(name = "style_name")
+    private String styleName;
+
+    @Column(name = "level_name")
+    private String levelName;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_styles",
             joinColumns = @JoinColumn(name = "style_level_id"),
