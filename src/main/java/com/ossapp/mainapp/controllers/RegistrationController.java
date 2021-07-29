@@ -37,7 +37,9 @@ public class RegistrationController {
         UserDto userDto = new UserDto();
         userDto.setEmail("mailforossapp@gmail.com");
         userDto.setPassword("100");
-        userDto.setUsername("Pisch");
+        userDto.setName("Pisch");
+        userDto.setWeight(1);
+        userDto.setSex(1);
         User registered = userService.registerNewUserAccount(userDto);
         System.out.println(registered.getId());
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered));

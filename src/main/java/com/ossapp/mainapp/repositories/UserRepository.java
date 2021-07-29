@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
-    Optional<User> findByUsername(String username);
+    Optional<User> findByName(String username);
     User findByEmail(String email);
 
     @Query(value = "select city_id from users where id = ?1", nativeQuery = true)

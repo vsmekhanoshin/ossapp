@@ -39,9 +39,9 @@ public class AuthController {
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
-        User user = userService.findByUsername(userDetails.getUsername()).get();
-        if(!user.isEnabled())
-            return ResponseEntity.ok("Учётка не активирована");
+        User user = userService.findByName(userDetails.getUsername()).get();
+//        if(!user.isEnabled())
+//            return ResponseEntity.ok("Учётка не активирована");
         return ResponseEntity.ok(new JwtResponse(token));
     }
 }

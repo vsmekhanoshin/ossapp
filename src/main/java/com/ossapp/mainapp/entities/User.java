@@ -1,11 +1,14 @@
 package com.ossapp.mainapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,8 +24,8 @@ public class User extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "password")
     private String password;
@@ -31,15 +34,9 @@ public class User extends BaseEntity {
     @Email
     private String email;
 
-@Column(name = "password")
-    private String password;
-
- @Column(name = "phone")
+    @Column(name = "phone")
     @Pattern(regexp = "^((\\+7)+([0-9]){10})$")
     private String phone;
-
-     @Column(name = "name")
-    private String name;
 
     @Column(name = "nick_telegram")
     private String nickTelegram;
@@ -73,7 +70,7 @@ public class User extends BaseEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "style_level_id"))
     private List<StyleLevel> stylesLevels;
-    
+
     @OneToOne(targetEntity = VerificationToken.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "id")
     private VerificationToken verificationToken;
@@ -95,13 +92,8 @@ public class User extends BaseEntity {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_styles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "style_level_id"))
-    private List<StyleLevel> stylesLevels;
 
-//    public void addImage(UserImages userImages) {
+    //    public void addImage(UserImages userImages) {
 //        if (userImages == null) {
 //            images = new ArrayList<>();
 //        }
@@ -109,6 +101,6 @@ public class User extends BaseEntity {
 //    }
     public User() {
 //        super();
-        this.enabled=false;
+        this.enabled = false;
     }
 }

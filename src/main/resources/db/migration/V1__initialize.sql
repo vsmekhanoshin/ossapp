@@ -1,14 +1,38 @@
+CREATE TABLE cities
+(
+    id        serial    NOT NULL,
+    name      varchar   NOT NULL,
+    region    varchar   NOT NULL,
+    country   varchar   NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    update_at TIMESTAMP NOT NULL,
+    active    BOOLEAN   NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE style_level
+(
+    id        serial    NOT NULL,
+    style     int       NOT NULL,
+    style_name     varchar(20)       NOT NULL,
+    level     int       NOT NULL,
+    level_name     varchar(20)      NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    update_at TIMESTAMP NOT NULL,
+    active    BOOLEAN   NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (id)
+);
+
 create table users
 (
     id serial,
-    username   varchar(30) not null,
+    name   varchar(30) not null,
     password   varchar(80) not null,
     email      varchar(50) unique,
     enabled    boolean default false,
-    primary key (id)
+    primary key (id),
 
     phone         varchar,
-    name          varchar   NOT NULL,
     nick_telegram varchar,
     birth_date    date,
     weight        int       NOT NULL,
@@ -62,6 +86,17 @@ CREATE TABLE images_user
     CONSTRAINT fk_image_user_key FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+CREATE TABLE user_styles
+(
+    user_id        int       NOT NULL,
+    style_level_id int       NOT NULL,
+    create_at      TIMESTAMP NOT NULL,
+    update_at      TIMESTAMP NOT NULL,
+    active         BOOLEAN   NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (user_id, style_level_id),
+    CONSTRAINT fk_user_key FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_style_level_key FOREIGN KEY (style_level_id) REFERENCES style_level (id)
+);
 
 insert into cities (name, region, country, create_at, update_at)
 values ('Москва', 'Московская область', 'Россия', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
@@ -122,26 +157,5 @@ values (1, 'ММА', 1, 'Начинающий', '2001-09-28 01:00:00', '2001-09-
        (11,'Муай-тай', 3, 'Продвинутый', '2001-09-28 01:00:00', '2001-09-28 01:00:00'),
        (11,'Муай-тай', 4, 'Профессиональный', '2001-09-28 01:00:00', '2001-09-28 01:00:00');
 
---INSERT INTO users
---VALUES ('ololo@ololo.com', '123', '89028090333', 'ololo', '@ololo', '2011-11-11',
---        80, 1, 1,'ololo ololo', '2011-11-10 19:00:00', '2011-11-10 19:00:00'),
---       ('Pisch', '321', '89028080666', 'pisch', '@pisch', '2011-11-11',
---        85, 1, 2, 'pisch pisch', '2011-11-10 19:00:00', '2011-11-10 19:00:00');
---
---INSERT INTO user_styles
---VALUES (1,1,'2011-11-10 19:00:00','2011-11-10 19:00:00'),
---       (2,2,'2011-11-10 19:00:00','2011-11-10 19:00:00');
 
-insert into roles (name)
-values ('ROLE_USER'),
-       ('ROLE_ADMIN'),
-       ('DELETE_USERS_PERMISSION');
-
-insert into users (username, password, email)
-values ('Bob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'ololo@gmail.com'),
-       ('Dob', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'xyz@gmail.com');
-
-insert into users_roles (user_id, role_id)
-values (1, 1),
-       (1, 3);
 
