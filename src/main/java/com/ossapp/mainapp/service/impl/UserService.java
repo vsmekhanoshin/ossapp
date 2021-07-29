@@ -4,6 +4,7 @@ import com.ossapp.mainapp.entities.Role;
 import com.ossapp.mainapp.entities.User;
 import com.ossapp.mainapp.entities.VerificationToken;
 import com.ossapp.mainapp.entities.dto.UserDto;
+import com.ossapp.mainapp.repositories.CityRepository;
 import com.ossapp.mainapp.repositories.RoleRepository;
 import com.ossapp.mainapp.repositories.UserRepository;
 import com.ossapp.mainapp.repositories.VerificationTokenRepository;
@@ -33,6 +34,7 @@ public class UserService implements UserDetailsService {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
     private VerificationTokenRepository tokenRepository;
+    private CityRepository cityRepository;
 
     @Autowired
     public void setTokenRepository(VerificationTokenRepository tokenRepository) {
@@ -54,16 +56,23 @@ public class UserService implements UserDetailsService {
         this.roleRepository = roleRepository;
     }
 
+    @Autowired
+    public void setCityRepository(CityRepository cityRepository){
+        this.cityRepository = cityRepository;
+    }
 
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<User> findByName(String name) {
+        return userRepository.findByName(name);
     }
 
     public User registerNewUserAccount(UserDto userDto) {
         User user = new User();
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName());
+        user.setWeight(userDto.getWeight());
+        user.setSex(userDto.getSex());
+        user.setCityId(cityRepository.getOne(1L));
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
         return userRepository.save(user);
     }
@@ -85,10 +94,10 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username).orElseThrow(() ->
+        User user = findByName(username).orElseThrow(() ->
                 new UsernameNotFoundException(String.format("User '%s' not found", username)));
         org.springframework.security.core.userdetails.User xyuyzer = new org.springframework.security.core.userdetails.User
-                (user.getUsername(), user.getPassword(), user.isEnabled(), true, true, true, mapRolesToAuthorities(user.getRoles()));
+                (user.getName(), user.getPassword(), user.isEnabled(), true, true, true, mapRolesToAuthorities(user.getRoles()));
         return xyuyzer;
     }
 
